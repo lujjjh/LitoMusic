@@ -5,18 +5,15 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 220px;
-  border-right: 1px solid #e1e0df;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-
-  .draggable {
-    height: 50px;
-    -webkit-app-region: drag;
-  }
+  background-color: rgba(60, 60, 67, 0.03);
+  padding: 20px 0;
 
   ul {
     flex: 1;
     min-height: 0;
-    overflow: auto;
+    overflow: overlay;
   }
 
   ul,
@@ -39,14 +36,13 @@ const Wrapper = styled.div`
     text-decoration: none;
     border-radius: 5px;
     &.active {
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: rgba(60, 60, 67, 0.1);
     }
   }
 `
 
 const Sidebar = () => (
   <Wrapper>
-    <div className="draggable"></div>
     <ul>
       <li>
         <NavLink to="/">Listen now</NavLink>

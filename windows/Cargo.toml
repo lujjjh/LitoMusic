@@ -1,0 +1,17 @@
+[package]
+name = "lito-windows"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+windows = "0.19.0"
+bindings = { path = "bindings" }
+callback_macros = { path = "callback-macros" }
+serde = { version = "1.0.125", features = ["derive"] }
+serde_json = "1.0.64"
+include_dir = "0.6.2"
+once_cell = "1.8.0"
+
+[[bin]]
+name = "lito"
+path = "src/main.rs"

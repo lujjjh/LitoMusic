@@ -40,6 +40,7 @@ const GlobalStyle = createGlobalStyle`${css`
   }
 `}
 `
+
 ;(async () => {
   await MusicKit.configure({
     developerToken:
@@ -54,3 +55,9 @@ const GlobalStyle = createGlobalStyle`${css`
     document.getElementById('root')
   )
 })()
+
+document.addEventListener('mousedown', (e) => {
+  if (e.button !== 1) return
+  e.preventDefault()
+  e.stopPropagation()
+})

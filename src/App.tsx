@@ -15,8 +15,7 @@ const Main = styled.div`
   flex: 1;
   min-width: 0;
   display: flex;
-  background-color: #fff;
-  overflow: auto;
+  overflow: overlay;
 `
 
 const App = () => {

@@ -61,7 +61,7 @@ const Header = styled.div`
 
 const ResourceListScroll = styled.div`
   margin: -15px;
-  overflow: auto;
+  overflow: overlay;
 `
 
 const ResourceList = styled.div`
@@ -76,7 +76,7 @@ const ResourceList = styled.div`
 const Recommendation = ({ value }: RecommendationProps) => {
   return (
     <Wrapper>
-      <Header>{value.attributes.title.stringForDisplay}</Header>
+      <Header>{value.attributes.title?.stringForDisplay}</Header>
       <ResourceListScroll>
         <ResourceList>
           {value.relationships.contents.data.map((value) => (
