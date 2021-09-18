@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod callback;
+mod composition;
 mod form;
 mod form_nchittest;
 mod main_form;
@@ -8,7 +9,7 @@ mod pwstr;
 mod web_resource_handler;
 mod webview;
 
-use bindings::Windows::Win32::UI::HiDpi;
+#[cfg(not(debug_assertions))]
 use include_dir::Dir;
 use main_form::MainForm;
 use windows::*;
@@ -16,6 +17,7 @@ use windows::*;
 #[macro_use]
 extern crate callback_macros;
 
+#[cfg(not(debug_assertions))]
 #[macro_use]
 extern crate include_dir;
 
@@ -34,11 +36,7 @@ const APP_URL: &str = if DEBUG {
 static APP_DIR: Dir = include_dir!("..\\build");
 
 fn main() -> Result<()> {
-    unsafe {
-        HiDpi::SetProcessDpiAwareness(HiDpi::PROCESS_PER_MONITOR_DPI_AWARE)?;
-    }
-
-    MainForm::init()?;
+    main_form::init()?;
 
     let main_form = MainForm::create()?;
     main_form.show(false);

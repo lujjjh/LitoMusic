@@ -6,6 +6,7 @@ import App from './App'
 const GlobalStyle = createGlobalStyle`${css`
   body {
     margin: 0;
+    color: #333;
     font-size: 13px;
     font-family: system-ui;
     background-color: transparent;
@@ -37,6 +38,10 @@ const GlobalStyle = createGlobalStyle`${css`
     &:active {
       background-color: rgba(0, 0, 0, 0.15);
     }
+  }
+
+  #musickit-dialog-scrim {
+    z-index: 1000;
   }
 `}
 `

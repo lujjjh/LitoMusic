@@ -1,12 +1,10 @@
 import useRequest from '@ahooksjs/use-request'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import Recommendation from './Recommendation'
 
 const Wrapper = styled.div`
-  flex: 1;
-  min-width: 0;
   padding-bottom: 32px;
-  overflow: overlay;
 `
 
 const Header = styled.div`
@@ -16,6 +14,7 @@ const Header = styled.div`
 `
 
 const ListenNow = () => {
+  const { t } = useTranslation()
   const { data: recommendationList } = useRequest(async () => {
     const instance = MusicKit.getInstance()
     const offset = new Date().getTimezoneOffset(),
@@ -32,7 +31,7 @@ const ListenNow = () => {
   })
   return (
     <Wrapper>
-      <Header>Listen now</Header>
+      <Header>{t('listenNow')}</Header>
       {recommendationList?.map((value: any) => (
         <Recommendation key={value.id} value={value} />
       ))}

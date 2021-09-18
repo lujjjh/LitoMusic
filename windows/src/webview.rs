@@ -6,25 +6,26 @@ use bindings::{
         Web::WebView2::Win32::{
             CreateCoreWebView2EnvironmentWithOptions, ICoreWebView2CompositionController,
             ICoreWebView2Controller2, ICoreWebView2Environment, ICoreWebView2Environment3,
-            ICoreWebView2EnvironmentOptions, COREWEBVIEW2_COLOR, COREWEBVIEW2_MOUSE_EVENT_KIND,
-            COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS,
+            ICoreWebView2EnvironmentOptions, ICoreWebView2Settings3, COREWEBVIEW2_COLOR,
+            COREWEBVIEW2_MOUSE_EVENT_KIND, COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS,
         },
     },
     Windows::{
         self,
         Win32::{
             Foundation::{BOOL, E_NOTIMPL, E_POINTER, HWND, LPARAM, POINT, PWSTR, S_OK, WPARAM},
-            Graphics::{DirectComposition, Gdi},
+            Graphics::DirectComposition,
             System::WinRT::EventRegistrationToken,
-            UI::WindowsAndMessaging,
+            UI::{Controls, KeyboardAndMouseInput, WindowsAndMessaging},
         },
     },
 };
 use once_cell::unsync::OnceCell;
 use windows::*;
 
-use crate::{callback, pwstr};
+use crate::{callback, form, pwstr, DEBUG};
 
+#[derive(Clone)]
 pub struct WebView {
     parent: HWND,
     dcomp_device: DirectComposition::IDCompositionDevice,
@@ -95,6 +96,15 @@ impl WebView {
                         A: 0,
                         ..Default::default()
                     })?;
+                    if !DEBUG {
+                        let webview2 = controller.get_CoreWebView2()?;
+                        let settings: ICoreWebView2Settings3 = webview2.get_Settings()?.cast()?;
+                        settings.put_AreDefaultContextMenusEnabled(false)?;
+                        settings.put_AreDevToolsEnabled(false)?;
+                        settings.put_IsStatusBarEnabled(false)?;
+                        settings.put_IsZoomControlEnabled(false)?;
+                        settings.put_AreBrowserAcceleratorKeysEnabled(false)?;
+                    }
                     controller_cell.set(controller).unwrap();
                     completion();
                     Ok(())
@@ -139,43 +149,80 @@ impl WebView {
         w_param: WPARAM,
         l_param: LPARAM,
     ) -> bool {
-        unsafe {
-            if WindowsAndMessaging::WM_MOUSEFIRST <= msg && msg <= WindowsAndMessaging::WM_MOUSELAST
-            {
-                let mouse_data: u32 = match msg {
-                    WindowsAndMessaging::WM_MOUSEWHEEL | WindowsAndMessaging::WM_MOUSEHWHEEL => {
-                        ((w_param.0 >> 16) & 0xffff) as _
-                    }
-                    WindowsAndMessaging::WM_XBUTTONDBLCLK
-                    | WindowsAndMessaging::WM_XBUTTONDOWN
-                    | WindowsAndMessaging::WM_XBUTTONUP => ((w_param.0 >> 16) & 0xffff) as _,
-                    _ => 0,
-                };
-                let mut point = POINT {
-                    x: (l_param.0 & 0xffff) as i32,
-                    y: ((l_param.0 >> 16) & 0xffff) as i32,
-                };
-                if msg == WindowsAndMessaging::WM_MOUSEWHEEL
-                    || msg == WindowsAndMessaging::WM_MOUSEHWHEEL
-                {
-                    Gdi::ScreenToClient(h_wnd, &mut point);
-                }
-                if let Some(controller) = self.get_controller() {
-                    let comp_controller: ICoreWebView2CompositionController =
-                        controller.cast().unwrap();
-                    comp_controller
-                        .SendMouseInput(
-                            COREWEBVIEW2_MOUSE_EVENT_KIND(msg as i32),
-                            COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS((w_param.0 & 0xffff) as i32),
-                            mouse_data,
-                            point,
-                        )
-                        .unwrap();
-                    return true;
-                }
-            }
-            false
+        let controller = self.get_controller();
+        if controller.is_none() {
+            return false;
         }
+        let controller = controller.unwrap();
+        if WindowsAndMessaging::WM_MOUSEFIRST <= msg && msg <= WindowsAndMessaging::WM_MOUSELAST
+            || msg == Controls::WM_MOUSELEAVE
+        {
+            match msg {
+                WindowsAndMessaging::WM_MOUSEMOVE => unsafe {
+                    KeyboardAndMouseInput::TrackMouseEvent(
+                        &mut KeyboardAndMouseInput::TRACKMOUSEEVENT {
+                            cbSize: std::mem::size_of::<KeyboardAndMouseInput::TRACKMOUSEEVENT>()
+                                as u32,
+                            dwFlags: KeyboardAndMouseInput::TME_LEAVE,
+                            hwndTrack: h_wnd,
+                            dwHoverTime: 0,
+                        },
+                    );
+                },
+                WindowsAndMessaging::WM_LBUTTONDOWN
+                | WindowsAndMessaging::WM_MBUTTONDOWN
+                | WindowsAndMessaging::WM_RBUTTONDOWN => unsafe {
+                    if KeyboardAndMouseInput::GetCapture() != h_wnd {
+                        KeyboardAndMouseInput::SetCapture(h_wnd);
+                    }
+                },
+                WindowsAndMessaging::WM_LBUTTONUP
+                | WindowsAndMessaging::WM_MBUTTONUP
+                | WindowsAndMessaging::WM_RBUTTONUP => unsafe {
+                    if KeyboardAndMouseInput::GetCapture() == h_wnd {
+                        KeyboardAndMouseInput::ReleaseCapture();
+                    }
+                },
+                _ => {}
+            };
+            let mouse_data: u32 = match msg {
+                WindowsAndMessaging::WM_MOUSEWHEEL | WindowsAndMessaging::WM_MOUSEHWHEEL => {
+                    ((w_param.0 >> 16) & 0xffff) as _
+                }
+                WindowsAndMessaging::WM_XBUTTONDBLCLK
+                | WindowsAndMessaging::WM_XBUTTONDOWN
+                | WindowsAndMessaging::WM_XBUTTONUP => ((w_param.0 >> 16) & 0xffff) as _,
+                _ => 0,
+            };
+            let mut point = POINT {
+                x: (l_param.0 & 0xffff) as i32,
+                y: ((l_param.0 >> 16) & 0xffff) as i32,
+            };
+            if msg == WindowsAndMessaging::WM_MOUSEWHEEL
+                || msg == WindowsAndMessaging::WM_MOUSEHWHEEL
+            {
+                point = form::point_screen_to_client(h_wnd, point);
+            }
+            if msg != Controls::WM_MOUSELEAVE {
+                let mut bounds = Default::default();
+                unsafe { controller.get_Bounds(&mut bounds) }.unwrap();
+                point.x -= bounds.left;
+                point.y -= bounds.top;
+            }
+            let comp_controller: ICoreWebView2CompositionController = controller.cast().unwrap();
+            unsafe {
+                comp_controller
+                    .SendMouseInput(
+                        COREWEBVIEW2_MOUSE_EVENT_KIND(msg as i32),
+                        COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS((w_param.0 & 0xffff) as i32),
+                        mouse_data,
+                        point,
+                    )
+                    .unwrap();
+            }
+            return true;
+        }
+        false
     }
 }
 

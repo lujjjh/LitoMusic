@@ -1,47 +1,45 @@
 use bindings::Windows::Win32::{
-    Foundation::{HWND, LPARAM},
+    Foundation::{HWND, LPARAM, POINT},
     UI::WindowsAndMessaging,
 };
 use windows::*;
 
-use crate::form::{self, get_window_scale};
+use crate::form;
 
 const OFFSET: i32 = 8;
 
 pub fn nc_hittest(h_wnd: HWND, l_param: LPARAM) -> Result<u32> {
-    let x = (l_param.0 & 0xFFFF) as i32;
-    let y = ((l_param.0 >> 16) & 0xFFFF) as i32;
-
-    let scale = get_window_scale(h_wnd);
-    let offset = (OFFSET as f32 * scale).round() as i32;
-
-    let window_rect = form::get_window_rect(h_wnd)?;
-    if y <= window_rect.top + offset {
-        if x <= window_rect.left + offset {
+    let POINT { x, y } = form::point_screen_to_client(h_wnd, form::point_from_lparam(l_param));
+    let offset = form::dip_to_px(h_wnd, OFFSET);
+    let window_rect = form::get_client_rect(h_wnd)?;
+    let width = window_rect.right - window_rect.left;
+    let height = window_rect.bottom - window_rect.top;
+    if y <= offset {
+        if x <= offset {
             return Ok(WindowsAndMessaging::HTTOPLEFT);
         }
-        if x >= window_rect.right - offset {
+        if x >= width - offset {
             return Ok(WindowsAndMessaging::HTTOPRIGHT);
         }
     }
-    if y >= window_rect.bottom - offset {
-        if x <= window_rect.left + offset {
+    if y >= height - offset {
+        if x <= offset {
             return Ok(WindowsAndMessaging::HTBOTTOMLEFT);
         }
-        if x >= window_rect.right - offset {
+        if x >= width - offset {
             return Ok(WindowsAndMessaging::HTBOTTOMRIGHT);
         }
     }
-    if y <= window_rect.top + offset {
+    if y <= offset {
         return Ok(WindowsAndMessaging::HTTOP);
     }
-    if y >= window_rect.bottom - offset {
+    if y >= height - offset {
         return Ok(WindowsAndMessaging::HTBOTTOM);
     }
-    if x <= window_rect.left + offset {
+    if x <= offset {
         return Ok(WindowsAndMessaging::HTLEFT);
     }
-    if x >= window_rect.right - offset {
+    if x >= width - offset {
         return Ok(WindowsAndMessaging::HTRIGHT);
     }
     Ok(WindowsAndMessaging::HTNOWHERE)

@@ -1,9 +1,25 @@
+import i18n from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import { initReactI18next } from 'react-i18next'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import styled from 'styled-components'
 import Authorize from './Authorize'
+import resources from './i18n/resources.json'
 import ListenNow from './ListenNow'
+import Player from './Player'
 import Sidebar from './Sidebar'
 import useAuthorized from './useAuthorized'
+
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources,
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false,
+    },
+  })
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -11,10 +27,17 @@ const Wrapper = styled.div`
   overflow: hidden;
 `
 
-const Main = styled.div`
+const MainScroll = styled.div`
+  position: relative;
+  background-color: #fff;
   flex: 1;
   min-width: 0;
-  display: flex;
+`
+
+const Main = styled.div`
+  box-sizing: border-box;
+  padding-top: 60px;
+  height: 100%;
   overflow: overlay;
 `
 
@@ -24,15 +47,18 @@ const App = () => {
     <Wrapper>
       <Router>
         <Sidebar />
-        <Main>
-          {authorized ? (
-            <>
-              <Route path="/" component={ListenNow} />
-            </>
-          ) : (
-            <Authorize />
-          )}
-        </Main>
+        <MainScroll>
+          <Main>
+            {authorized ? (
+              <>
+                <Player />
+                <Route path="/" component={ListenNow} />
+              </>
+            ) : (
+              <Authorize />
+            )}
+          </Main>
+        </MainScroll>
       </Router>
     </Wrapper>
   )

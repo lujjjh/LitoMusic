@@ -35,17 +35,11 @@ pub fn take_pwstr(source: PWSTR) -> String {
     result
 }
 
-pub fn pwstr_from_str(source: &str) -> PWSTR {
-    match source {
-        "" => PWSTR(ptr::null_mut::<u16>()),
-        value => PWSTR(
-            value
-                .encode_utf16()
-                .chain(std::iter::once(0))
-                .collect::<Vec<_>>()
-                .as_mut_ptr(),
-        ),
-    }
+pub fn null_terminated_u16_vec_from_str(source: &str) -> Vec<u16> {
+    source
+        .encode_utf16()
+        .chain(std::iter::once(0))
+        .collect::<Vec<_>>()
 }
 
 /// Allocate a [`PWSTR`] with [`Com::CoTaskMemAlloc`] and copy a [`&str`] into it.

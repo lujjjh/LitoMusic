@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 
 const useAuthorized = () => {
-  const instance = MusicKit.getInstance()
-  const [authorized, setAuthorized] = useState<boolean>(instance.isAuthorized)
+  const [authorized, setAuthorized] = useState<boolean>(MusicKit.getInstance().isAuthorized)
   useEffect(() => {
-    const rawAuthorize = instance.authorize
-    instance.authorize = function () {
-      return rawAuthorize.apply(this, arguments).then(() => setAuthorized(instance.isAuthorized))
+    const instance = MusicKit.getInstance()
+    const handleAuthorizationStatusDidChange = () => {
+      setAuthorized(instance.isAuthorized)
     }
+    instance.addEventListener(MusicKit.Events.authorizationStatusDidChange, handleAuthorizationStatusDidChange)
     return () => {
-      instance.authorize = rawAuthorize
+      instance.removeEventListener(MusicKit.Events.authorizationStatusDidChange, handleAuthorizationStatusDidChange)
     }
   })
   return authorized
