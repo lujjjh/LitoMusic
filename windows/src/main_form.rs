@@ -204,6 +204,7 @@ impl MainForm {
                         .AddScriptToExecuteOnDocumentCreated(
                             r#"
                                 document.addEventListener("mousedown", event => {
+                                    if (event.button !== 0) return
                                     const appRegion = window.getComputedStyle(event.target).getPropertyValue('-webkit-app-region')
                                     if (appRegion === 'drag') {
                                         event.preventDefault()
