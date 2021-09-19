@@ -1,4 +1,4 @@
-use std::{cell::RefCell, ptr};
+use std::{ptr, sync::atomic};
 
 use bindings::Windows::Win32::{
     Foundation::{HWND, LPARAM, POINT, WPARAM},
@@ -15,13 +15,12 @@ const CONTROL_SYMBOL_SIZE: f32 = 10.;
 
 pub struct WebViewFormComposition {
     h_wnd: HWND,
-    is_maximized: RefCell<bool>,
+    is_maximized: atomic::AtomicBool,
     d2d_factory: Direct2D::ID2D1Factory2,
     dc: Direct2D::ID2D1DeviceContext,
     dcomp_device: DirectComposition::IDCompositionDevice,
     _target: DirectComposition::IDCompositionTarget,
     content_visual: DirectComposition::IDCompositionVisual,
-    content_surface: DirectComposition::IDCompositionVirtualSurface,
     webview_visual: DirectComposition::IDCompositionVisual,
     caption_button_visual: DirectComposition::IDCompositionVisual,
 }
@@ -79,63 +78,22 @@ impl WebViewFormComposition {
             _target.SetRoot(&root_visual)?;
 
             let content_visual = dcomp_device.CreateVisual()?;
-            // root_visual.AddVisual(&content_visual, true, None)?;
-            let content_surface = dcomp_device.CreateVirtualSurface(
-                1024,
-                768,
-                Dxgi::DXGI_FORMAT_B8G8R8A8_UNORM,
-                Dxgi::DXGI_ALPHA_MODE_IGNORE,
-            )?;
-            let mut dxgi_surface: Option<Dxgi::IDXGISurface1> = None;
-            let mut offset = Default::default();
-            content_surface.BeginDraw(
-                ptr::null(),
-                &Dxgi::IDXGISurface1::IID,
-                std::mem::transmute(&mut dxgi_surface),
-                &mut offset,
-            )?;
-            let dxgi_content_surface = dxgi_surface.unwrap();
-            let bitmap = dc.CreateBitmapFromDxgiSurface(
-                &dxgi_content_surface,
-                &Direct2D::D2D1_BITMAP_PROPERTIES1 {
-                    pixelFormat: Direct2D::D2D1_PIXEL_FORMAT {
-                        format: Dxgi::DXGI_FORMAT_B8G8R8A8_UNORM,
-                        alphaMode: Direct2D::D2D1_ALPHA_MODE_PREMULTIPLIED,
-                    },
-                    dpiX: 0.,
-                    dpiY: 0.,
-                    bitmapOptions: Direct2D::D2D1_BITMAP_OPTIONS_TARGET
-                        | Direct2D::D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-                    colorContext: None,
-                },
-            )?;
-            dc.SetTarget(&bitmap);
-            dc.BeginDraw();
-            dc.Clear(&Direct2D::D2D1_COLOR_F {
-                r: 1.,
-                g: 1.,
-                b: 1.,
-                a: 1.,
-            });
-            dc.EndDraw(ptr::null_mut(), ptr::null_mut())?;
-            content_surface.EndDraw()?;
-            content_visual.SetContent(&content_surface)?;
+            root_visual.AddVisual(&content_visual, true, None)?;
 
             let webview_visual = dcomp_device.CreateVisual()?;
-            root_visual.AddVisual(&webview_visual, true, None)?;
+            root_visual.AddVisual(&webview_visual, true, &content_visual)?;
 
             let caption_button_visual = dcomp_device.CreateVisual()?;
             root_visual.AddVisual(&caption_button_visual, true, &webview_visual)?;
 
             Ok(Self {
                 h_wnd,
-                is_maximized: RefCell::new(false),
+                is_maximized: atomic::AtomicBool::new(false),
                 d2d_factory,
                 dc,
                 dcomp_device,
                 _target,
                 content_visual,
-                content_surface,
                 webview_visual,
                 caption_button_visual,
             })
@@ -155,7 +113,11 @@ impl WebViewFormComposition {
     }
 
     pub fn update(&self, w_param: WPARAM) -> Result<()> {
-        *self.is_maximized.borrow_mut() = w_param.0 == WindowsAndMessaging::SIZE_MAXIMIZED as usize;
+        self.is_maximized.store(
+            w_param.0 == WindowsAndMessaging::SIZE_MAXIMIZED as usize,
+            atomic::Ordering::SeqCst,
+        );
+        self.update_content()?;
         self.update_caption_button()?;
         Ok(())
     }
@@ -173,12 +135,81 @@ impl WebViewFormComposition {
         (dpi_x / 96., dpi_y / 96.)
     }
 
+    fn update_content(&self) -> Result<()> {
+        unsafe {
+            let dc = &self.dc;
+            let bounds = form::get_client_rect(self.h_wnd)?;
+            let (scale_x, scale_y) = self.get_scale();
+            let width_px = bounds.right - bounds.left;
+            let height_px = bounds.bottom - bounds.top;
+            let width = width_px as f32 / scale_x;
+            let height = height_px as f32 / scale_y;
+            // TODO: Reuse resources if the size is not changed.
+            let surface = self.dcomp_device.CreateSurface(
+                width_px as u32,
+                height_px as u32,
+                Dxgi::DXGI_FORMAT_B8G8R8A8_UNORM,
+                Dxgi::DXGI_ALPHA_MODE_PREMULTIPLIED,
+            )?;
+            let mut dxgi_surface: Option<Dxgi::IDXGISurface1> = None;
+            let mut offset = Default::default();
+            surface.BeginDraw(
+                ptr::null(),
+                &Dxgi::IDXGISurface1::IID,
+                std::mem::transmute(&mut dxgi_surface),
+                &mut offset,
+            )?;
+            let dxgi_surface = dxgi_surface.unwrap();
+            let (dpi_x, dpi_y) = self.get_dpi();
+            let bitmap = dc.CreateBitmapFromDxgiSurface(
+                &dxgi_surface,
+                &Direct2D::D2D1_BITMAP_PROPERTIES1 {
+                    pixelFormat: Direct2D::D2D1_PIXEL_FORMAT {
+                        format: Dxgi::DXGI_FORMAT_B8G8R8A8_UNORM,
+                        alphaMode: Direct2D::D2D1_ALPHA_MODE_PREMULTIPLIED,
+                    },
+                    dpiX: dpi_x,
+                    dpiY: dpi_y,
+                    bitmapOptions: Direct2D::D2D1_BITMAP_OPTIONS_TARGET
+                        | Direct2D::D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+                    colorContext: None,
+                },
+            )?;
+            dc.SetTarget(&bitmap);
+            dc.BeginDraw();
+            dc.Clear(ptr::null());
+            let brush = dc.CreateSolidColorBrush(
+                &Direct2D::D2D1_COLOR_F {
+                    r: 1.,
+                    g: 1.,
+                    b: 1.,
+                    a: 1.,
+                },
+                ptr::null(),
+            )?;
+            dc.FillRectangle(
+                &Direct2D::D2D_RECT_F {
+                    left: 220.,
+                    top: 0.,
+                    right: width,
+                    bottom: height,
+                },
+                &brush,
+            );
+            dc.EndDraw(ptr::null_mut(), ptr::null_mut())?;
+            surface.EndDraw()?;
+            self.content_visual.SetContent(&surface)?;
+            Ok(())
+        }
+    }
+
     fn get_caption_button_bounds(&self) -> Result<Direct2D::D2D_RECT_F> {
         let (scale_x, scale_y) = self.get_scale();
         let client_bounds = form::get_client_rect(self.h_wnd)?;
+        let is_maximized = self.is_maximized.load(atomic::Ordering::SeqCst);
         let right = (client_bounds.right - client_bounds.left) as f32 / scale_x
-            - if *self.is_maximized.borrow() { 0. } else { 1. };
-        let top = if *self.is_maximized.borrow() {
+            - if is_maximized { 0. } else { 1. };
+        let top = if is_maximized {
             unsafe {
                 let cy_frame =
                     WindowsAndMessaging::GetSystemMetrics(WindowsAndMessaging::SM_CYFRAME) as f32
@@ -257,7 +288,7 @@ impl WebViewFormComposition {
             Ok(WindowsAndMessaging::HTMAXBUTTON)
         } else if pt_in_rect(self.get_close_button_bounds()?) {
             Ok(WindowsAndMessaging::HTCLOSE)
-        } else if !*self.is_maximized.borrow() {
+        } else if !self.is_maximized.load(atomic::Ordering::SeqCst) {
             form_nchittest::nc_hittest(self.h_wnd, l_param)
         } else {
             Ok(WindowsAndMessaging::HTNOWHERE)
@@ -331,7 +362,7 @@ impl WebViewFormComposition {
                 None,
             );
             let offset_x = offset_x + CONTROL_BUTTON_WIDTH;
-            if *self.is_maximized.borrow() {
+            if self.is_maximized.load(atomic::Ordering::SeqCst) {
                 // Restore button.
                 dc.DrawRectangle(
                     &Direct2D::D2D_RECT_F {
