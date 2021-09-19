@@ -17,7 +17,7 @@ use bindings::{
             Foundation::{BOOL, E_NOTIMPL, E_POINTER, HWND, LPARAM, POINT, PWSTR, S_OK, WPARAM},
             Graphics::DirectComposition,
             System::WinRT::EventRegistrationToken,
-            UI::{Controls, KeyboardAndMouseInput, WindowsAndMessaging},
+            UI::{Controls, KeyboardAndMouseInput, Shell, WindowsAndMessaging},
         },
     },
 };
@@ -138,9 +138,16 @@ impl WebView {
         );
 
         unsafe {
+            let local_app_data_dir = pwstr::take_pwstr(Shell::SHGetKnownFolderPath(
+                &Shell::FOLDERID_LocalAppData,
+                0,
+                None,
+            )?);
+            // TODO: Use PathCchCombine?
+            let user_data_folder = local_app_data_dir + "\\Lito\\Lito.WebView2";
             CreateCoreWebView2EnvironmentWithOptions(
                 None,
-                None,
+                user_data_folder,
                 ICoreWebView2EnvironmentOptions::from(EnvironmentOptions::new(
                     "--disable-web-security --disable-smooth-scrolling --enable-features=OverlayScrollbar",
                 )),

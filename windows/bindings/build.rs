@@ -20,7 +20,7 @@ fn main() {
             Controls::*,
             HiDpi::{GetDpiForWindow, SetProcessDpiAwareness, PROCESS_DPI_AWARENESS},
             KeyboardAndMouseInput::{GetCapture, ReleaseCapture, SetCapture, SetFocus, TrackMouseEvent},
-            Shell::{SHCreateMemStream, ShellExecuteW},
+            Shell::{FOLDERID_LocalAppData, SHCreateMemStream, SHGetKnownFolderPath, ShellExecuteW},
             WindowsAndMessaging::*,
         },
         Windows::Win32::Graphics::Direct3D11::*,
