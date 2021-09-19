@@ -4,7 +4,7 @@ use bindings::Windows::Win32::{
     Foundation::{BOOL, HWND, LPARAM, LRESULT, POINT, PWSTR, RECT, WPARAM},
     Graphics::{Dwm, Gdi},
     System::LibraryLoader,
-    UI::{Controls, HiDpi::GetDpiForWindow, WindowsAndMessaging},
+    UI::{Controls, HiDpi, WindowsAndMessaging},
 };
 use windows::*;
 
@@ -159,7 +159,24 @@ pub fn center_window(h_wnd: HWND) -> Result<()> {
 }
 
 pub fn get_window_dpi(h_wnd: HWND) -> u32 {
-    unsafe { GetDpiForWindow(h_wnd) }
+    // I'm not using GetDpiForWindow because Win 8 does not support it.
+    unsafe {
+        let monitor = Gdi::MonitorFromWindow(h_wnd, Gdi::MONITOR_DEFAULTTONEAREST);
+        if monitor.is_null() {
+            96
+        } else {
+            let (mut dpi_x, mut _dpi_y) = (0, 0);
+            match HiDpi::GetDpiForMonitor(
+                monitor,
+                HiDpi::MDT_EFFECTIVE_DPI,
+                &mut dpi_x,
+                &mut _dpi_y,
+            ) {
+                Ok(()) => dpi_x,
+                Err(_) => 96,
+            }
+        }
+    }
 }
 
 pub fn get_window_scale(h_wnd: HWND) -> f32 {
