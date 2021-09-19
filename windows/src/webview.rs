@@ -4,10 +4,11 @@ use bindings::{
     Microsoft::{
         self,
         Web::WebView2::Win32::{
-            CreateCoreWebView2EnvironmentWithOptions, ICoreWebView2CompositionController,
-            ICoreWebView2Controller2, ICoreWebView2Environment, ICoreWebView2Environment3,
-            ICoreWebView2EnvironmentOptions, ICoreWebView2Settings3, COREWEBVIEW2_COLOR,
-            COREWEBVIEW2_MOUSE_EVENT_KIND, COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS,
+            CreateCoreWebView2EnvironmentWithOptions, GetAvailableCoreWebView2BrowserVersionString,
+            ICoreWebView2CompositionController, ICoreWebView2Controller2, ICoreWebView2Environment,
+            ICoreWebView2Environment3, ICoreWebView2EnvironmentOptions, ICoreWebView2Settings3,
+            COREWEBVIEW2_COLOR, COREWEBVIEW2_MOUSE_EVENT_KIND,
+            COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS,
         },
     },
     Windows::{
@@ -24,6 +25,14 @@ use once_cell::unsync::OnceCell;
 use windows::*;
 
 use crate::{callback, form, pwstr, DEBUG};
+
+pub fn get_version() -> Result<String> {
+    let mut versioninfo = PWSTR::default();
+    unsafe {
+        GetAvailableCoreWebView2BrowserVersionString(None, &mut versioninfo)?;
+    }
+    Ok(pwstr::take_pwstr(versioninfo))
+}
 
 #[derive(Clone)]
 pub struct WebView {

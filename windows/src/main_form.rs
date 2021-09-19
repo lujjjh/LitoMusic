@@ -1,5 +1,3 @@
-use std::ptr;
-
 use bindings::{
     Microsoft::Web::WebView2::Win32::{
         ICoreWebView2, ICoreWebView2NavigationCompletedEventArgs,
@@ -7,9 +5,9 @@ use bindings::{
         COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL,
     },
     Windows::Win32::{
-        Foundation::{BOOL, E_POINTER, HWND, LPARAM, LRESULT, PWSTR, RECT, WPARAM},
-        Graphics::Dwm,
-        System::{Com, LibraryLoader},
+        Foundation::{E_POINTER, HWND, LPARAM, LRESULT, PWSTR, RECT, WPARAM},
+        Graphics::{DirectComposition, Dwm},
+        System::Com,
         UI::{Controls, KeyboardAndMouseInput, WindowsAndMessaging},
     },
 };
@@ -20,7 +18,7 @@ use crate::{
     callback,
     composition::WebViewFormComposition,
     form::{self, center_window, dip_to_px},
-    form_nchittest, pwstr,
+    pwstr,
     web_resource_handler::WebResourceHandler,
     webview, APP_URL, DEBUG,
 };
@@ -35,70 +33,35 @@ pub struct MainForm {
     webview: webview::WebView,
 }
 
-fn register_class() -> Result<()> {
-    let h_instance = unsafe { LibraryLoader::GetModuleHandleW(None) };
-    let window_class = WindowsAndMessaging::WNDCLASSW {
-        style: WindowsAndMessaging::CS_HREDRAW | WindowsAndMessaging::CS_VREDRAW,
-        lpfnWndProc: Some(wndproc),
-        hInstance: h_instance,
-        hIcon: unsafe {
-            WindowsAndMessaging::LoadIconW(h_instance, WindowsAndMessaging::IDI_APPLICATION)
-        },
-        hCursor: unsafe { WindowsAndMessaging::LoadCursorW(None, WindowsAndMessaging::IDC_ARROW) },
-        lpszClassName: PWSTR(pwstr::null_terminated_u16_vec_from_str(CLASS_NAME).as_mut_ptr()),
-        ..Default::default()
-    };
-    if unsafe { WindowsAndMessaging::RegisterClassW(&window_class) } != 0 {
-        Ok(())
-    } else {
-        Err(HRESULT::from_thread().into())
-    }
-}
-
 pub fn init() -> Result<()> {
     unsafe { Com::CoInitializeEx(std::ptr::null_mut(), Com::COINIT_APARTMENTTHREADED)? };
-    register_class()?;
+    form::register_class(CLASS_NAME, Some(wndproc))?;
     Ok(())
 }
 
 fn create_window() -> Result<HWND> {
-    let h_instance = unsafe { LibraryLoader::GetModuleHandleW(None) };
-    let h_wnd = unsafe {
-        WindowsAndMessaging::CreateWindowExW(
-            WindowsAndMessaging::WS_EX_NOREDIRECTIONBITMAP,
-            PWSTR(pwstr::null_terminated_u16_vec_from_str(CLASS_NAME).as_mut_ptr()),
-            PWSTR(pwstr::null_terminated_u16_vec_from_str("Lito Music").as_mut_ptr()),
-            WindowsAndMessaging::WS_OVERLAPPEDWINDOW,
-            0,
-            0,
-            0,
-            0,
-            None,
-            None,
-            h_instance,
-            ptr::null_mut(),
-        )
-    };
-    if h_wnd.is_null() {
-        return Err(HRESULT::from_thread().into());
-    }
-    unsafe {
-        WindowsAndMessaging::SetWindowPos(
-            h_wnd,
-            None,
-            0,
-            0,
-            dip_to_px(h_wnd, 1024),
-            dip_to_px(h_wnd, 768),
-            WindowsAndMessaging::SWP_NOMOVE,
-        );
-    }
+    let h_wnd = form::create_window(
+        None,
+        CLASS_NAME,
+        "Lito Music",
+        WindowsAndMessaging::WS_OVERLAPPEDWINDOW,
+        WindowsAndMessaging::WS_EX_NOREDIRECTIONBITMAP,
+        RECT::default(),
+    )?;
+    form::set_window_bounds(
+        h_wnd,
+        RECT {
+            right: dip_to_px(h_wnd, 1024),
+            bottom: dip_to_px(h_wnd, 768),
+            ..Default::default()
+        },
+    )?;
     center_window(h_wnd)?;
     Ok(h_wnd)
 }
 
 impl MainForm {
-    pub fn create() -> Result<MainForm> {
+    pub fn create() -> Result<Self> {
         let h_wnd = create_window()?;
         form::enable_blur_behind(h_wnd)?;
         unsafe {
@@ -287,10 +250,10 @@ impl MainForm {
                     let webview_visual = self.composition.get_webview_visual();
                     // TODO: Remove the workaround when https://github.com/microsoft/win32metadata/issues/600 is fixed.
                     let set_offset_y: unsafe extern "system" fn(
-                        *mut std::ffi::c_void,
+                        DirectComposition::IDCompositionVisual,
                         f32,
                     ) -> HRESULT = std::mem::transmute(webview_visual.vtable().6);
-                    set_offset_y(webview_visual.abi(), bounds.top as f32)
+                    set_offset_y(webview_visual.clone(), bounds.top as f32)
                         .ok()
                         .unwrap();
                     self.composition.commit().unwrap();
@@ -401,21 +364,5 @@ unsafe fn wndproc_pre(h_wnd: HWND, msg: u32, w_param: WPARAM, l_param: LPARAM) -
             Some(LRESULT(0))
         }
         _ => None,
-    }
-}
-
-pub fn dispatch_message_loop() -> Result<()> {
-    unsafe {
-        let mut msg = WindowsAndMessaging::MSG::default();
-        loop {
-            match WindowsAndMessaging::GetMessageW(&mut msg, None, 0, 0) {
-                BOOL(-1) => break Err(HRESULT::from_thread().into()),
-                BOOL(0) => break Ok(()),
-                _ => {
-                    WindowsAndMessaging::TranslateMessage(&msg);
-                    WindowsAndMessaging::DispatchMessageW(&msg);
-                }
-            }
-        }
     }
 }

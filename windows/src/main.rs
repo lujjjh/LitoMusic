@@ -8,10 +8,13 @@ mod main_form;
 mod pwstr;
 mod web_resource_handler;
 mod webview;
+mod webview_install_form;
 
+use bindings::Windows::Win32::UI::WindowsAndMessaging;
 #[cfg(not(debug_assertions))]
 use include_dir::Dir;
 use main_form::MainForm;
+use webview_install_form::WebViewInstallForm;
 use windows::*;
 
 #[macro_use]
@@ -36,12 +39,32 @@ const APP_URL: &str = if DEBUG {
 static APP_DIR: Dir = include_dir!("..\\build");
 
 fn main() -> Result<()> {
-    main_form::init()?;
+    check_webview_installation()?;
 
+    main_form::init()?;
     let main_form = MainForm::create()?;
     main_form.show(false);
-
-    main_form::dispatch_message_loop()?;
-
+    form::dispatch_message_loop()?;
     Ok(())
+}
+
+fn check_webview_installation() -> Result<()> {
+    match webview::get_version() {
+        Ok(_) => Ok(()),
+        Err(e) => unsafe {
+            let result = WindowsAndMessaging::MessageBoxW(
+                None,
+                "Edge WebView2 Runtime is missing.\nWould you like to download it now?",
+                "Edge WebView2 Runtime",
+                WindowsAndMessaging::MB_ICONQUESTION | WindowsAndMessaging::MB_YESNO,
+            );
+            if result == WindowsAndMessaging::IDYES {
+                webview_install_form::init()?;
+                let webview_install_form = WebViewInstallForm::create()?;
+                webview_install_form.show(true)?;
+                form::dispatch_message_loop()?;
+            }
+            Err(e)
+        },
+    }
 }

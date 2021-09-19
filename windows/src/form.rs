@@ -1,10 +1,110 @@
+use std::ptr;
+
 use bindings::Windows::Win32::{
-    Foundation::{BOOL, HWND, LPARAM, POINT, RECT},
+    Foundation::{BOOL, HWND, LPARAM, LRESULT, POINT, PWSTR, RECT, WPARAM},
     Graphics::{Dwm, Gdi},
     System::LibraryLoader,
     UI::{Controls, HiDpi::GetDpiForWindow, WindowsAndMessaging},
 };
 use windows::*;
+
+use crate::pwstr;
+
+fn check_h_wnd(h_wnd: HWND) -> Result<HWND> {
+    if h_wnd.is_null() {
+        Err(HRESULT::from_thread().into())
+    } else {
+        Ok(h_wnd)
+    }
+}
+
+fn check_bool(value: BOOL) -> Result<()> {
+    if value.as_bool() {
+        Ok(())
+    } else {
+        Err(HRESULT::from_thread().into())
+    }
+}
+
+pub fn register_class(
+    class_name: &str,
+    wnd_proc: Option<unsafe extern "system" fn(HWND, u32, WPARAM, LPARAM) -> LRESULT>,
+) -> Result<()> {
+    let h_instance = unsafe { LibraryLoader::GetModuleHandleW(None) };
+    let class_name = pwstr::null_terminated_u16_vec_from_str(class_name);
+    let window_class = WindowsAndMessaging::WNDCLASSW {
+        style: WindowsAndMessaging::CS_HREDRAW | WindowsAndMessaging::CS_VREDRAW,
+        lpfnWndProc: wnd_proc,
+        hInstance: h_instance,
+        hIcon: unsafe {
+            WindowsAndMessaging::LoadIconW(h_instance, WindowsAndMessaging::IDI_APPLICATION)
+        },
+        hCursor: unsafe { WindowsAndMessaging::LoadCursorW(None, WindowsAndMessaging::IDC_ARROW) },
+        lpszClassName: PWSTR(class_name.as_ptr() as _),
+        ..Default::default()
+    };
+    if unsafe { WindowsAndMessaging::RegisterClassW(&window_class) } != 0 {
+        Ok(())
+    } else {
+        Err(HRESULT::from_thread().into())
+    }
+}
+
+pub fn create_window(
+    parent: Option<HWND>,
+    class_name: &str,
+    window_name: &str,
+    style: WindowsAndMessaging::WINDOW_STYLE,
+    ex_style: WindowsAndMessaging::WINDOW_EX_STYLE,
+    bounds: RECT,
+) -> Result<HWND> {
+    check_h_wnd(unsafe {
+        WindowsAndMessaging::CreateWindowExW(
+            ex_style,
+            class_name,
+            window_name,
+            style,
+            bounds.left,
+            bounds.top,
+            bounds.right - bounds.left,
+            bounds.bottom - bounds.top,
+            parent,
+            None,
+            LibraryLoader::GetModuleHandleW(None),
+            ptr::null_mut(),
+        )
+    })
+}
+
+pub fn set_window_bounds(h_wnd: HWND, bounds: RECT) -> Result<()> {
+    check_bool(unsafe {
+        WindowsAndMessaging::SetWindowPos(
+            h_wnd,
+            None,
+            bounds.left,
+            bounds.top,
+            bounds.right - bounds.left,
+            bounds.bottom - bounds.top,
+            Default::default(),
+        )
+    })
+}
+
+pub fn dispatch_message_loop() -> Result<()> {
+    unsafe {
+        let mut msg = WindowsAndMessaging::MSG::default();
+        loop {
+            match WindowsAndMessaging::GetMessageW(&mut msg, None, 0, 0) {
+                BOOL(-1) => break Err(HRESULT::from_thread().into()),
+                BOOL(0) => break Ok(()),
+                _ => {
+                    WindowsAndMessaging::TranslateMessage(&msg);
+                    WindowsAndMessaging::DispatchMessageW(&msg);
+                }
+            }
+        }
+    }
+}
 
 pub fn get_work_area_rect() -> Result<RECT> {
     let mut work_area_rect = RECT::default();
@@ -12,7 +112,7 @@ pub fn get_work_area_rect() -> Result<RECT> {
         WindowsAndMessaging::SystemParametersInfoW(
             WindowsAndMessaging::SPI_GETWORKAREA,
             0,
-            work_area_rect.set_abi() as _,
+            std::mem::transmute(&mut work_area_rect),
             Default::default(),
         )
     }
@@ -42,17 +142,20 @@ pub fn get_client_rect(h_wnd: HWND) -> Result<RECT> {
     }
 }
 
-pub fn center_window(h_wnd: HWND) -> Result<()> {
+pub fn center_window_in_rect(h_wnd: HWND, rect: RECT) -> Result<()> {
     let window_rect = get_window_rect(h_wnd)?;
     let window_width = window_rect.right - window_rect.left;
     let window_height = window_rect.bottom - window_rect.top;
-    let work_area_rect = get_work_area_rect()?;
-    let x = work_area_rect.left / 2 + work_area_rect.right / 2 - window_width / 2;
-    let y = work_area_rect.top / 2 + work_area_rect.bottom / 2 - window_height / 2;
+    let x = rect.left / 2 + rect.right / 2 - window_width / 2;
+    let y = rect.top / 2 + rect.bottom / 2 - window_height / 2;
     unsafe {
         WindowsAndMessaging::SetWindowPos(h_wnd, None, x, y, 0, 0, WindowsAndMessaging::SWP_NOSIZE);
     }
     Ok(())
+}
+
+pub fn center_window(h_wnd: HWND) -> Result<()> {
+    center_window_in_rect(h_wnd, get_work_area_rect()?)
 }
 
 pub fn get_window_dpi(h_wnd: HWND) -> u32 {

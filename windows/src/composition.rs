@@ -55,7 +55,7 @@ impl WebViewFormComposition {
                         Direct2D::D2D1_DEBUG_LEVEL(0)
                     },
                 },
-                d2d_factory.set_abi(),
+                std::mem::transmute(&mut d2d_factory),
             )?;
             let d2d_factory = d2d_factory.unwrap();
             let d2d_device = d2d_factory.CreateDevice(&dxgi_device)?;
@@ -65,6 +65,13 @@ impl WebViewFormComposition {
             d2d_factory.GetDesktopDpi(&mut dpi_x, &mut dpi_y);
             dc.SetDpi(dpi_x, dpi_y);
 
+            // let mut dcomp_device: Option<DirectComposition::IDCompositionDevice> = None;
+            // DirectComposition::DCompositionCreateDevice(
+            //     &dxgi_device,
+            //     &DirectComposition::IDCompositionDevice::IID,
+            //     std::mem::transmute(&mut dcomp_device),
+            // )?;
+            // let dcomp_device = dcomp_device.unwrap();
             let dcomp_device: DirectComposition::IDCompositionDevice =
                 DirectComposition::DCompositionCreateDevice(&dxgi_device)?;
             let _target = dcomp_device.CreateTargetForHwnd(h_wnd, true)?;
@@ -84,7 +91,7 @@ impl WebViewFormComposition {
             content_surface.BeginDraw(
                 ptr::null(),
                 &Dxgi::IDXGISurface1::IID,
-                dxgi_surface.set_abi(),
+                std::mem::transmute(&mut dxgi_surface),
                 &mut offset,
             )?;
             let dxgi_content_surface = dxgi_surface.unwrap();
@@ -276,7 +283,7 @@ impl WebViewFormComposition {
             surface.BeginDraw(
                 ptr::null(),
                 &Dxgi::IDXGISurface1::IID,
-                dxgi_surface.set_abi(),
+                std::mem::transmute(&mut dxgi_surface),
                 &mut offset,
             )?;
             let dxgi_surface = dxgi_surface.unwrap();
@@ -394,12 +401,16 @@ impl WebViewFormComposition {
             surface.EndDraw()?;
             self.caption_button_visual.SetContent(&surface)?;
             // TODO: Remove the workaround when https://github.com/microsoft/win32metadata/issues/600 is fixed.
-            let set_offset_x: unsafe extern "system" fn(*mut std::ffi::c_void, f32) -> HRESULT =
-                std::mem::transmute(self.caption_button_visual.vtable().4);
-            let set_offset_y: unsafe extern "system" fn(*mut std::ffi::c_void, f32) -> HRESULT =
-                std::mem::transmute(self.caption_button_visual.vtable().6);
-            set_offset_x(self.caption_button_visual.abi(), bounds.left * scale_x).ok()?;
-            set_offset_y(self.caption_button_visual.abi(), bounds.top * scale_y).ok()?;
+            let set_offset_x: unsafe extern "system" fn(
+                DirectComposition::IDCompositionVisual,
+                f32,
+            ) -> HRESULT = std::mem::transmute(self.caption_button_visual.vtable().4);
+            let set_offset_y: unsafe extern "system" fn(
+                DirectComposition::IDCompositionVisual,
+                f32,
+            ) -> HRESULT = std::mem::transmute(self.caption_button_visual.vtable().6);
+            set_offset_x(self.caption_button_visual.clone(), bounds.left * scale_x).ok()?;
+            set_offset_y(self.caption_button_visual.clone(), bounds.top * scale_y).ok()?;
             self.commit()?;
         }
         Ok(())
