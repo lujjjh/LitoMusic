@@ -2,6 +2,8 @@
 
 A lightweight Apple Music client for Windows, built with Edge WebView2 and React.
 
+<img src="https://user-images.githubusercontent.com/3000535/133959513-bfbd478b-6d3a-4fb6-9d45-153531fd0b5f.png" width="1048" alt="Lito Music" />
+
 ## System requirements
 
 - Windows 10 or above.
