@@ -18778,7 +18778,7 @@
           if ('' !== (null === (e = null == s ? void 0 : s.dataset) || void 0 === e ? void 0 : e.webComponents)) return
           const n = 'noModule' in s,
             d = `components/musickit-components/musickit-components${n ? '.esm' : ''}.js`,
-            h = 'https:' + cdnBaseURL(d) + d,
+            h = /* 'https:' + cdnBaseURL(d) + */ location.protocol + '//' + location.host + '/' + d,
             p = {}
           n && (p.type = 'module'),
             s.hasAttribute('async') && (p.async = ''),
