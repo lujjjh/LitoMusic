@@ -59,7 +59,16 @@ impl WebResourceHandler {
                             let content = file.contents();
                             let content =
                                 Shell::SHCreateMemStream(content.as_ptr(), content.len() as u32);
-                            env.CreateWebResourceResponse(content, 200, "OK", None)?
+                            let headers = match std::path::Path::new(path)
+                                .extension()
+                                .and_then(std::ffi::OsStr::to_str)
+                                .map(|s| s.to_lowercase())
+                                .as_deref()
+                            {
+                                Some("js") => "content-type: application/javascript",
+                                _ => "",
+                            };
+                            env.CreateWebResourceResponse(content, 200, "OK", headers)?
                         }
                         None => env.CreateWebResourceResponse(None, 404, "Not Found", None)?,
                     };

@@ -1,8 +1,7 @@
 use bindings::{
     Microsoft::Web::WebView2::Win32::{
-        ICoreWebView2, ICoreWebView2NavigationCompletedEventArgs,
-        ICoreWebView2WebMessageReceivedEventArgs, ICoreWebView2WebResourceRequestedEventHandler,
-        COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL,
+        ICoreWebView2, ICoreWebView2WebMessageReceivedEventArgs,
+        ICoreWebView2WebResourceRequestedEventHandler, COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL,
     },
     Windows::Win32::{
         Foundation::{E_POINTER, HWND, LPARAM, LRESULT, PWSTR, RECT, WPARAM},
@@ -185,30 +184,7 @@ impl MainForm {
                     webview2
                         .Navigate(APP_URL.to_string() + "index.html")
                         .unwrap();
-                    let mut token = Default::default();
-                    let navigation_completed_handler = Box::new(
-                        move |webview2: Option<ICoreWebView2>,
-                              _args: Option<ICoreWebView2NavigationCompletedEventArgs>|
-                              -> Result<()> {
-                            unsafe {
-                                let webview2 =
-                                    webview2.ok_or_else(|| Error::fast_error(E_POINTER))?;
-                                webview2.remove_NavigationCompleted(token)?;
-                                controller.put_IsVisible(true)?;
-                                self.show(true);
-                                Ok(())
-                            }
-                        },
-                    );
-                    webview2
-                        .add_NavigationCompleted(
-                            callback::NavigationCompletedEventHandler::create(
-                                navigation_completed_handler,
-                            ),
-                            &mut token,
-                        )
-                        .unwrap();
-                } else {
+                    controller.put_IsVisible(true).unwrap();
                     self.show(true);
                 }
                 Some(LRESULT(0))
