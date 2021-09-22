@@ -1,19 +1,35 @@
-# Lito Music
+<h1 align="center">
+  <a href="#readme">
+    <img src="/logo.svg" width="100" height="100" alt="Lito Music" /><br />
+    Lito Music
+  </a>
+</h1>
+<p align="center">
+  <a href="https://github.com/lujjjh/lito/releases"><img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/lujjjh/lito?sort=semver" /></a>
+</p>
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/3000535/134394206-27d49884-96ef-4197-9dc5-b4177b83c3cb.png" width="600" alt="Lito Music (screenshot)" />
+</p>
 
 A lightweight Apple Music client for Windows, built with MusicKit JS, Edge WebView2 and React.
 
-<img src="https://user-images.githubusercontent.com/3000535/133959513-bfbd478b-6d3a-4fb6-9d45-153531fd0b5f.png" width="1048" alt="Lito Music" />
-
 ## System requirements
 
-- Windows 10 or above.
-- Edge WebView2 runtime, which is pre-installed in Windows 10 Insider and Windows 11.
-  If Edge WebView2 runtime is not installed, Lito Music will try to download and install it at the first launch.
+- OS version ≥ Windows 10.
+- Edge WebView2 runtime (pre-installed in Windows 10 Insider Preview and Windows 11).  
+  If not is not installed, Lito Music will try to download and install it at the first launch.
 
-## Binaries
-
-Lito Music is still in an early stage.
+## Downloads
 
 Pre-releases can be found [here][releases].
 
 [releases]: https://github.com/lujjjh/lito/releases
+
+## Build
+
+Rust and Node.js are required.
+
+```powershell
+npm install
+npm run build
+```
