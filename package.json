@@ -2,6 +2,14 @@
   "name": "lito",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "concurrently -k \"npm:start:react\" \"npm:start:windows\"",
+    "start:react": "vite",
+    "start:windows": "cd windows && cargo build && wait-on tcp:3000 && target\\debug\\lito.exe",
+    "build": "npm run build:react && npm run build:windows",
+    "build:react": "tsc && vite build",
+    "build:windows": "cd windows && cargo build --target x86_64-pc-windows-msvc --release"
+  },
   "dependencies": {
     "ahooks": "^2.10.9",
     "i18next": "^20.6.1",
@@ -10,21 +18,6 @@
     "react-i18next": "^11.12.0",
     "react-router-dom": "^5.3.0",
     "styled-components": "^5.3.1"
-  },
-  "scripts": {
-    "start": "concurrently -k \"npm:start:react\" \"npm:start:windows\"",
-    "start:react": "cross-env BROWSER=none react-scripts start",
-    "start:windows": "cd windows && cargo build && wait-on tcp:3000 && target\\debug\\lito.exe",
-    "build": "npm run build:react && npm run build:windows",
-    "build:react": "react-scripts build",
-    "build:windows": "cd windows && cargo build --target x86_64-pc-windows-msvc --release",
-    "test": "react-scripts test"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
@@ -36,9 +29,6 @@
   },
   "devDependencies": {
     "@prettier/plugin-xml": "^1.0.2",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
     "@types/apple-music-api": "^0.4.1",
     "@types/musickit-js": "^1.0.1",
     "@types/react": "^17.0.20",
@@ -46,14 +36,16 @@
     "@types/react-router": "^5.1.16",
     "@types/react-router-dom": "^5.1.8",
     "@types/styled-components": "^5.1.14",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
     "concurrently": "^6.2.1",
     "cross-env": "^7.0.3",
     "i18next-browser-languagedetector": "^6.1.2",
     "prettier": "^2.4.1",
     "prettier-plugin-organize-imports": "^2.3.3",
     "prettier-plugin-style-order": "^0.2.2",
-    "react-scripts": "4.0.3",
     "typescript": "^4.4.2",
+    "vite": "^2.5.10",
+    "vite-react-jsx": "^1.1.2",
     "wait-on": "^6.0.0"
   }
 }

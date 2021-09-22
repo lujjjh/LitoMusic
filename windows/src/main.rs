@@ -36,7 +36,7 @@ const APP_URL: &str = if DEBUG {
 };
 
 #[cfg(not(debug_assertions))]
-static APP_DIR: Dir = include_dir!("..\\build");
+static APP_DIR: Dir = include_dir!("..\\dist");
 
 fn main() -> Result<()> {
     check_webview_installation()?;
