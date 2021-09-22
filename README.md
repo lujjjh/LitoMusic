@@ -18,7 +18,7 @@
 
 - OS version ≥ Windows 10.
 - Edge WebView2 runtime (pre-installed in Windows 10 Insider Preview and Windows 11).  
-  If not is not installed, Lito Music will try to download and install it at the first launch.
+  If not installed, Lito Music will try to download and install it at the first launch.
 
 ## Downloads
 
