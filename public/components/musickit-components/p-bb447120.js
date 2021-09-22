@@ -1,0 +1,1 @@
+function n(n,t,o){return t?n.map((n=>{const[r,s]=n,c=s.bind(o);return t.addEventListener(r,c),[r,c]})):[]}function t(n,t){n&&t&&n.forEach((n=>{const[o,r]=n;t.removeEventListener(o,r)}))}export{n as s,t}

@@ -1,0 +1,1 @@
+import{c as r}from"./p-112455b1.js";var a=r((function(r,a){Object.defineProperty(a,"__esModule",{value:!0}),a.getLanguages=function(){if("undefined"==typeof navigator)return[];if(navigator.languages)return navigator.languages;var r=navigator.language||navigator.userLanguage;return r?[r]:[]}}));export{a as n}

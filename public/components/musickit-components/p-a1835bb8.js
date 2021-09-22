@@ -1,0 +1,1 @@
+const n=new Map;function t(t,o,r){(function(t){let o=n.get(t);return o||(o={},n.set(t,o)),o}(t))[o]=r}function o(t,o){const r=n.get(t);if(r)return r[o]}export{o as f,t as r}
