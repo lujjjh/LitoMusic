@@ -10,8 +10,9 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/3000535/134394206-27d49884-96ef-4197-9dc5-b4177b83c3cb.png" width="600" alt="Lito Music (screenshot)" />
 </p>
-
-A lightweight Apple Music client for Windows, built with MusicKit JS, Edge WebView2 and React.
+<p align="center">
+  <strong>Lito (/laɪto/)</strong>, a lightweight Apple Music client for Windows, built with MusicKit JS, Edge WebView2 and React.
+</p>
 
 ## System requirements
 
