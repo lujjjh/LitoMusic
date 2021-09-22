@@ -1,4 +1,7 @@
 #[cfg(not(debug_assertions))]
+use std::io::prelude::*;
+
+#[cfg(not(debug_assertions))]
 use bindings::Windows::Win32::UI::Shell;
 use bindings::{
     Microsoft::{
@@ -54,9 +57,13 @@ impl WebResourceHandler {
             let uri = pwstr::take_pwstr(uri);
             match uri.strip_prefix(APP_URL) {
                 Some(path) => {
-                    let response = match APP_DIR.get_file(path) {
+                    let response = match APP_DIR.get_file(path.to_string() + ".gz") {
                         Some(file) => {
-                            let content = file.contents();
+                            // It seems that WebView2 here does not support Content-Encoding,
+                            // so we have to decompress the content ourselves.
+                            let mut content = Vec::new();
+                            let mut d = flate2::read::GzDecoder::new(file.contents());
+                            d.read_to_end(&mut content).unwrap();
                             let content =
                                 Shell::SHCreateMemStream(content.as_ptr(), content.len() as u32);
                             let headers = match std::path::Path::new(path)
@@ -65,6 +72,7 @@ impl WebResourceHandler {
                                 .map(|s| s.to_lowercase())
                                 .as_deref()
                             {
+                                Some("html") => "content-type: text/html; charset=utf-8",
                                 Some("js") => "content-type: application/javascript",
                                 _ => "",
                             };
