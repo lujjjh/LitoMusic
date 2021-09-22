@@ -11,8 +11,8 @@ use windows::*;
 use crate::pwstr;
 
 fn check_h_wnd(h_wnd: HWND) -> Result<HWND> {
-    if h_wnd.is_null() {
-        Err(HRESULT::from_thread().into())
+    if h_wnd.is_invalid() {
+        Err(Error::from_win32())
     } else {
         Ok(h_wnd)
     }
@@ -22,7 +22,7 @@ fn check_bool(value: BOOL) -> Result<()> {
     if value.as_bool() {
         Ok(())
     } else {
-        Err(HRESULT::from_thread().into())
+        Err(Error::from_win32())
     }
 }
 
@@ -46,7 +46,7 @@ pub fn register_class(
     if unsafe { WindowsAndMessaging::RegisterClassW(&window_class) } != 0 {
         Ok(())
     } else {
-        Err(HRESULT::from_thread().into())
+        Err(Error::from_win32())
     }
 }
 
@@ -95,7 +95,7 @@ pub fn dispatch_message_loop() -> Result<()> {
         let mut msg = WindowsAndMessaging::MSG::default();
         loop {
             match WindowsAndMessaging::GetMessageW(&mut msg, None, 0, 0) {
-                BOOL(-1) => break Err(HRESULT::from_thread().into()),
+                BOOL(-1) => break Err(Error::from_win32()),
                 BOOL(0) => break Ok(()),
                 _ => {
                     WindowsAndMessaging::TranslateMessage(&msg);
@@ -120,7 +120,7 @@ pub fn get_work_area_rect() -> Result<RECT> {
     {
         Ok(work_area_rect)
     } else {
-        Err(HRESULT::from_thread().into())
+        Err(Error::from_win32())
     }
 }
 
@@ -129,7 +129,7 @@ pub fn get_window_rect(h_wnd: HWND) -> Result<RECT> {
     if unsafe { WindowsAndMessaging::GetWindowRect(h_wnd, &mut rect) }.as_bool() {
         Ok(rect)
     } else {
-        Err(HRESULT::from_thread().into())
+        Err(Error::from_win32())
     }
 }
 
@@ -138,7 +138,7 @@ pub fn get_client_rect(h_wnd: HWND) -> Result<RECT> {
     if unsafe { WindowsAndMessaging::GetClientRect(h_wnd, &mut rect) }.as_bool() {
         Ok(rect)
     } else {
-        Err(HRESULT::from_thread().into())
+        Err(Error::from_win32())
     }
 }
 
@@ -162,7 +162,7 @@ pub fn get_window_dpi(h_wnd: HWND) -> u32 {
     // I'm not using GetDpiForWindow because Win 8 does not support it.
     unsafe {
         let monitor = Gdi::MonitorFromWindow(h_wnd, Gdi::MONITOR_DEFAULTTONEAREST);
-        if monitor.is_null() {
+        if monitor.is_invalid() {
             96
         } else {
             let (mut dpi_x, mut _dpi_y) = (0, 0);

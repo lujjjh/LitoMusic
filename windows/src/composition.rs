@@ -64,15 +64,13 @@ impl WebViewFormComposition {
             d2d_factory.GetDesktopDpi(&mut dpi_x, &mut dpi_y);
             dc.SetDpi(dpi_x, dpi_y);
 
-            // let mut dcomp_device: Option<DirectComposition::IDCompositionDevice> = None;
-            // DirectComposition::DCompositionCreateDevice(
-            //     &dxgi_device,
-            //     &DirectComposition::IDCompositionDevice::IID,
-            //     std::mem::transmute(&mut dcomp_device),
-            // )?;
-            // let dcomp_device = dcomp_device.unwrap();
-            let dcomp_device: DirectComposition::IDCompositionDevice =
-                DirectComposition::DCompositionCreateDevice(&dxgi_device)?;
+            let mut dcomp_device: Option<DirectComposition::IDCompositionDevice> = None;
+            DirectComposition::DCompositionCreateDevice(
+                &dxgi_device,
+                &DirectComposition::IDCompositionDevice::IID,
+                std::mem::transmute(&mut dcomp_device),
+            )?;
+            let dcomp_device = dcomp_device.unwrap();
             let _target = dcomp_device.CreateTargetForHwnd(h_wnd, true)?;
             let root_visual = dcomp_device.CreateVisual()?;
             _target.SetRoot(&root_visual)?;

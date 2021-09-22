@@ -1,9 +1,10 @@
-use std::{ffi::c_void, sync::atomic};
-
-use bindings::Windows::Win32::{
-    Foundation::{E_NOINTERFACE, E_NOTIMPL, HWND, LPARAM, LRESULT, PWSTR, RECT, S_OK, WPARAM},
-    System::Com,
-    UI::{Controls, Shell, WindowsAndMessaging},
+use bindings::Windows::{
+    self,
+    Win32::{
+        Foundation::{E_NOTIMPL, HWND, LPARAM, LRESULT, PWSTR, RECT, S_OK, WPARAM},
+        System::Com,
+        UI::{Controls, Shell, WindowsAndMessaging},
+    },
 };
 use windows::*;
 
@@ -159,206 +160,76 @@ unsafe extern "system" fn wndproc(
     }
 }
 
-// TODO: Use #[implement] when upgrade windows-rs to v0.20.0.
-#[repr(C)]
-struct BindStatusCallback {
-    vtable: Com::IBindStatusCallback_abi,
-    ref_count: atomic::AtomicU32,
-    h_wnd: HWND,
-}
+#[implement(Windows::Win32::System::Com::IBindStatusCallback)]
+#[derive(Clone, Copy)]
+struct BindStatusCallback(HWND);
 
+#[allow(non_snake_case)]
 impl BindStatusCallback {
     fn new(progress_bar_h_wnd: HWND) -> Self {
-        Self {
-            vtable: Com::IBindStatusCallback_abi(
-                Self::query_interface,
-                Self::add_ref,
-                Self::release,
-                Self::on_start_binding,
-                Self::get_priority,
-                Self::on_low_resource,
-                Self::on_progress,
-                Self::on_stop_binding,
-                Self::get_bind_info,
-                Self::on_data_available,
-                Self::on_object_available,
-            ),
-            ref_count: atomic::AtomicU32::new(1),
-            h_wnd: progress_bar_h_wnd,
-        }
+        Self(progress_bar_h_wnd)
     }
 
-    unsafe extern "system" fn query_interface(
-        this: *mut c_void,
-        riid: &windows::Guid,
-        pvv_object: *mut *mut c_void,
-    ) -> HRESULT {
-        match riid {
-            &IUnknown::IID | &Com::IBindStatusCallback::IID => {
-                *pvv_object = this;
-                Self::add_ref(this);
-                S_OK
-            }
-            _ => E_NOINTERFACE,
-        }
-    }
-
-    unsafe extern "system" fn add_ref(this: *mut c_void) -> u32 {
-        let this = &**(this as *const *const BindStatusCallback);
-        this.ref_count.fetch_add(1, atomic::Ordering::SeqCst) + 1
-    }
-
-    unsafe extern "system" fn release(this: *mut c_void) -> u32 {
-        let this = &**(this as *const *const BindStatusCallback);
-        this.ref_count.fetch_sub(1, atomic::Ordering::SeqCst) - 1
-    }
-
-    unsafe extern "system" fn on_start_binding(
-        _this: *mut c_void,
-        _dwreserved: u32,
-        _pib: *mut c_void,
-    ) -> HRESULT {
+    pub fn OnStartBinding(&self, _dwreserved: u32, _pib: &Option<Com::IBinding>) -> HRESULT {
         E_NOTIMPL
     }
 
-    unsafe extern "system" fn get_priority(_this: *mut c_void, value: *mut i32) -> HRESULT {
-        *value = 0;
+    pub fn GetPriority(&self) -> Result<i32> {
+        Ok(0)
+    }
+
+    pub fn OnLowResource(&self, _reserved: u32) -> HRESULT {
         S_OK
     }
 
-    unsafe extern "system" fn on_low_resource(_this: *mut c_void, _reserved: u32) -> HRESULT {
-        S_OK
-    }
-
-    unsafe extern "system" fn on_progress(
-        this: *mut c_void,
-        progress: u32,
-        max: u32,
-        _status_code: u32,
-        _status_text: PWSTR,
+    pub unsafe fn OnProgress(
+        &self,
+        ulprogress: u32,
+        ulprogressmax: u32,
+        _ulstatuscode: u32,
+        _szstatustext: PWSTR,
     ) -> HRESULT {
-        let this = &**(this as *const *const BindStatusCallback);
-        let h_wnd = this.h_wnd;
-        WindowsAndMessaging::SendMessageW(
-            h_wnd,
-            Controls::PBM_SETRANGE,
-            WPARAM(0),
-            LPARAM(0 | (max << 16) as isize),
-        );
-        WindowsAndMessaging::SendMessageW(
-            h_wnd,
-            Controls::PBM_SETPOS,
-            WPARAM(progress as usize),
-            LPARAM(0),
-        );
+        let h_wnd = self.0;
+        if WindowsAndMessaging::IsWindow(h_wnd).as_bool() {
+            WindowsAndMessaging::SendMessageW(
+                h_wnd,
+                Controls::PBM_SETRANGE,
+                WPARAM(0),
+                LPARAM(0 | (ulprogressmax << 16) as isize),
+            );
+            WindowsAndMessaging::SendMessageW(
+                h_wnd,
+                Controls::PBM_SETPOS,
+                WPARAM(ulprogress as usize),
+                LPARAM(0),
+            );
+        }
         S_OK
     }
 
-    unsafe extern "system" fn on_stop_binding(
-        _this: *mut c_void,
-        _hresult: windows::HRESULT,
-        _szerror: PWSTR,
-    ) -> HRESULT {
+    pub fn OnStopBinding(&self, _hresult: HRESULT, _szerrorr: PWSTR) -> HRESULT {
         E_NOTIMPL
     }
 
-    unsafe extern "system" fn get_bind_info(
-        _this: *mut c_void,
+    pub unsafe fn GetBindInfo(
+        &self,
         _grfbindf: *mut u32,
-        _pbindinfo: *mut Com::BINDINFO_abi,
+        _pbindinfoo: *mut Com::BINDINFO,
     ) -> HRESULT {
         E_NOTIMPL
     }
 
-    unsafe extern "system" fn on_data_available(
-        _this: *mut c_void,
+    pub fn OnDataAvailable(
+        &self,
         _grfbscf: u32,
         _dwsize: u32,
-        _pformatetc: *mut Com::FORMATETC,
-        _pstgmed: *mut Com::STGMEDIUM_abi,
+        _pformatetc: *const Com::FORMATETC,
+        _pstgmed: *const Com::STGMEDIUM,
     ) -> HRESULT {
         E_NOTIMPL
     }
 
-    unsafe extern "system" fn on_object_available(
-        _this: *mut c_void,
-        _riid: *const Guid,
-        _punk: *mut c_void,
-    ) -> HRESULT {
+    pub fn OnObjectAvailable(&self, _riid: *const Guid, _punkk: &Option<IUnknown>) -> HRESULT {
         E_NOTIMPL
     }
 }
-
-// #[implement(Windows::Win32::System::Com::IBindStatusCallback)]
-// #[derive(Clone, Copy)]
-// struct BindStatusCallback(HWND);
-
-// #[allow(non_snake_case)]
-// impl BindStatusCallback {
-//     fn new(progress_bar_h_wnd: HWND) -> Self {
-//         Self(progress_bar_h_wnd)
-//     }
-
-//     pub fn OnStartBinding(&self, _dwreserved: u32, _pib: &Option<Com::IBinding>) -> HRESULT {
-//         E_NOTIMPL
-//     }
-
-//     pub fn GetPriority(&self) -> Result<i32> {
-//         Ok(0)
-//     }
-
-//     pub fn OnLowResource(&self, _reserved: u32) -> HRESULT {
-//         S_OK
-//     }
-
-//     pub unsafe fn OnProgress(
-//         &self,
-//         ulprogress: u32,
-//         ulprogressmax: u32,
-//         _ulstatuscode: u32,
-//         _szstatustext: PWSTR,
-//     ) -> HRESULT {
-//         let h_wnd = self.0;
-//         if WindowsAndMessaging::IsWindow(h_wnd).as_bool() {
-//             WindowsAndMessaging::SendMessageW(
-//                 h_wnd,
-//                 Controls::PBM_SETRANGE,
-//                 WPARAM(0),
-//                 LPARAM(0 | (ulprogressmax << 16) as isize),
-//             );
-//             WindowsAndMessaging::SendMessageW(
-//                 h_wnd,
-//                 Controls::PBM_SETPOS,
-//                 WPARAM(ulprogress as usize),
-//                 LPARAM(0),
-//             );
-//         }
-//         S_OK
-//     }
-
-//     pub fn OnStopBinding(&self, _hresult: HRESULT, _szerrorr: PWSTR) -> HRESULT {
-//         E_NOTIMPL
-//     }
-
-//     pub unsafe fn GetBindInfo(
-//         &self,
-//         _grfbindf: *mut u32,
-//         _pbindinfoo: *mut Com::BINDINFO,
-//     ) -> HRESULT {
-//         E_NOTIMPL
-//     }
-
-//     pub fn OnDataAvailable(
-//         &self,
-//         _grfbscf: u32,
-//         _dwsize: u32,
-//         _pformatetc: *mut Com::FORMATETC,
-//         _pstgmed: *mut Com::STGMEDIUM,
-//     ) -> HRESULT {
-//         E_NOTIMPL
-//     }
-
-//     pub fn OnObjectAvailable(&self, _riid: *const Guid, _punkk: Option<IUnknown>) -> HRESULT {
-//         E_NOTIMPL
-//     }
-// }
