@@ -63,7 +63,6 @@ fn create_window() -> Result<HWND> {
 impl MainForm {
     pub fn create() -> Result<Self> {
         let h_wnd = create_window()?;
-        form::enable_blur_behind(h_wnd)?;
         unsafe {
             Dwm::DwmExtendFrameIntoClientArea(
                 h_wnd,

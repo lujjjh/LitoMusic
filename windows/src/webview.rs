@@ -69,7 +69,8 @@ impl WebView {
 
         let cursor_changed_handler = Box::new(
             move |comp_controller: Option<ICoreWebView2CompositionController>,
-                  _args: Option<IUnknown>| {
+                  _args: Option<IUnknown>|
+                  -> Result<()> {
                 unsafe {
                     let comp_controller =
                         comp_controller.ok_or_else(|| Error::fast_error(E_POINTER))?;

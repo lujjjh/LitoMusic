@@ -20,7 +20,6 @@ pub struct WebViewFormComposition {
     dc: Direct2D::ID2D1DeviceContext,
     dcomp_device: DirectComposition::IDCompositionDevice,
     _target: DirectComposition::IDCompositionTarget,
-    content_visual: DirectComposition::IDCompositionVisual,
     webview_visual: DirectComposition::IDCompositionVisual,
     caption_button_visual: DirectComposition::IDCompositionVisual,
 }
@@ -75,11 +74,8 @@ impl WebViewFormComposition {
             let root_visual = dcomp_device.CreateVisual()?;
             _target.SetRoot(&root_visual)?;
 
-            let content_visual = dcomp_device.CreateVisual()?;
-            root_visual.AddVisual(&content_visual, true, None)?;
-
             let webview_visual = dcomp_device.CreateVisual()?;
-            root_visual.AddVisual(&webview_visual, true, &content_visual)?;
+            root_visual.AddVisual(&webview_visual, true, None)?;
 
             let caption_button_visual = dcomp_device.CreateVisual()?;
             root_visual.AddVisual(&caption_button_visual, true, &webview_visual)?;
@@ -91,7 +87,6 @@ impl WebViewFormComposition {
                 dc,
                 dcomp_device,
                 _target,
-                content_visual,
                 webview_visual,
                 caption_button_visual,
             })
@@ -115,7 +110,6 @@ impl WebViewFormComposition {
             w_param.0 == WindowsAndMessaging::SIZE_MAXIMIZED as usize,
             atomic::Ordering::SeqCst,
         );
-        self.update_content()?;
         self.update_caption_button()?;
         Ok(())
     }
@@ -131,74 +125,6 @@ impl WebViewFormComposition {
     fn get_scale(&self) -> (f32, f32) {
         let (dpi_x, dpi_y) = self.get_dpi();
         (dpi_x / 96., dpi_y / 96.)
-    }
-
-    fn update_content(&self) -> Result<()> {
-        unsafe {
-            let dc = &self.dc;
-            let bounds = form::get_client_rect(self.h_wnd)?;
-            let (scale_x, scale_y) = self.get_scale();
-            let width_px = bounds.right - bounds.left;
-            let height_px = bounds.bottom - bounds.top;
-            let width = width_px as f32 / scale_x;
-            let height = height_px as f32 / scale_y;
-            // TODO: Reuse resources if the size is not changed.
-            let surface = self.dcomp_device.CreateSurface(
-                width_px as u32,
-                height_px as u32,
-                Dxgi::DXGI_FORMAT_B8G8R8A8_UNORM,
-                Dxgi::DXGI_ALPHA_MODE_PREMULTIPLIED,
-            )?;
-            let mut dxgi_surface: Option<Dxgi::IDXGISurface1> = None;
-            let mut offset = Default::default();
-            surface.BeginDraw(
-                ptr::null(),
-                &Dxgi::IDXGISurface1::IID,
-                std::mem::transmute(&mut dxgi_surface),
-                &mut offset,
-            )?;
-            let dxgi_surface = dxgi_surface.unwrap();
-            let (dpi_x, dpi_y) = self.get_dpi();
-            let bitmap = dc.CreateBitmapFromDxgiSurface(
-                &dxgi_surface,
-                &Direct2D::D2D1_BITMAP_PROPERTIES1 {
-                    pixelFormat: Direct2D::D2D1_PIXEL_FORMAT {
-                        format: Dxgi::DXGI_FORMAT_B8G8R8A8_UNORM,
-                        alphaMode: Direct2D::D2D1_ALPHA_MODE_PREMULTIPLIED,
-                    },
-                    dpiX: dpi_x,
-                    dpiY: dpi_y,
-                    bitmapOptions: Direct2D::D2D1_BITMAP_OPTIONS_TARGET
-                        | Direct2D::D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-                    colorContext: None,
-                },
-            )?;
-            dc.SetTarget(&bitmap);
-            dc.BeginDraw();
-            dc.Clear(ptr::null());
-            let brush = dc.CreateSolidColorBrush(
-                &Direct2D::D2D1_COLOR_F {
-                    r: 1.,
-                    g: 1.,
-                    b: 1.,
-                    a: 1.,
-                },
-                ptr::null(),
-            )?;
-            dc.FillRectangle(
-                &Direct2D::D2D_RECT_F {
-                    left: 220.,
-                    top: 0.,
-                    right: width,
-                    bottom: height,
-                },
-                &brush,
-            );
-            dc.EndDraw(ptr::null_mut(), ptr::null_mut())?;
-            surface.EndDraw()?;
-            self.content_visual.SetContent(&surface)?;
-            Ok(())
-        }
     }
 
     fn get_caption_button_bounds(&self) -> Result<Direct2D::D2D_RECT_F> {
