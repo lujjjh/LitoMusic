@@ -16,6 +16,7 @@ use windows::*;
 use crate::{
     callback,
     composition::WebViewFormComposition,
+    env::ParsedArgs,
     form::{self, center_window, dip_to_px},
     pwstr,
     web_resource_handler::WebResourceHandler,
@@ -151,6 +152,9 @@ impl MainForm {
                                 &mut _token,
                             )
                             .unwrap();
+                    }
+                    if ParsedArgs::from_args().dev_tools() {
+                        webview2.OpenDevToolsWindow().unwrap();
                     }
                     let mut _token = Default::default();
                     webview2

@@ -2,6 +2,7 @@
 
 mod callback;
 mod composition;
+mod env;
 mod form;
 mod form_nchittest;
 mod main_form;
@@ -45,13 +46,14 @@ fn main() -> Result<()> {
     let main_form = MainForm::create()?;
     main_form.show(false);
     form::dispatch_message_loop()?;
+
     Ok(())
 }
 
 fn check_webview_installation() -> Result<()> {
     match webview::get_version() {
         Ok(_) => Ok(()),
-        Err(e) => unsafe {
+        Err(_) => unsafe {
             let result = WindowsAndMessaging::MessageBoxW(
                 None,
                 "Edge WebView2 Runtime is missing.\nWould you like to download it now?",
@@ -64,7 +66,7 @@ fn check_webview_installation() -> Result<()> {
                 webview_install_form.show(true)?;
                 form::dispatch_message_loop()?;
             }
-            Err(e)
+            std::process::exit(1);
         },
     }
 }
