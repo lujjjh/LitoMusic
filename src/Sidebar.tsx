@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+import logo from '../logo.svg'
 import NavButton from './NavButton'
 
 const Wrapper = styled.div`
@@ -42,12 +43,11 @@ const Wrapper = styled.div`
 `
 
 const Logo = styled.div`
+  background: url(${logo}) center center no-repeat;
+  background-size: 30px 30px;
   height: 60px;
-  line-height: 60px;
   -webkit-app-region: drag;
-  padding: 0 22px;
   margin-bottom: 10px;
-  font-size: 15px;
   color: #000;
 `
 
@@ -55,7 +55,7 @@ const Sidebar = () => {
   const { t } = useTranslation()
   return (
     <Wrapper>
-      <Logo>Lito Music</Logo>
+      <Logo />
       <ul>
         <li>
           <NavButton to="/">{t('listenNow')}</NavButton>

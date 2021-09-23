@@ -74,6 +74,7 @@ impl WebResourceHandler {
                             {
                                 Some("html") => "content-type: text/html; charset=utf-8",
                                 Some("js") => "content-type: application/javascript",
+                                Some("svg") => "content-type: image/svg+xml",
                                 _ => "",
                             };
                             env.CreateWebResourceResponse(content, 200, "OK", headers)?
