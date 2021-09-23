@@ -100,6 +100,7 @@ const Slider = styled.div`
       width: 12px;
       height: 3px;
       background-color: #333;
+      border-radius: 1px;
       opacity: 0;
       transition: transform 0.1s ease, opacity 0.1s ease;
     }
@@ -164,6 +165,7 @@ const ProgressControl = () => {
     },
     [playerRef]
   )
+  const durationDetermined = useMemo(() => duration !== undefined && duration !== Infinity, [duration])
   return (
     <Wrapper>
       <CurrentTime>{formatTime(currentTime)}</CurrentTime>
@@ -173,13 +175,14 @@ const ProgressControl = () => {
           type="range"
           max={duration}
           step="any"
-          value={duration !== undefined && duration !== Infinity ? currentTime : 0}
+          value={durationDetermined ? currentTime : 0}
           style={{
             ['--progress' as any]: String(progress || 0) + '%',
           }}
           onMouseDown={handleSeekStart}
           onMouseUp={handleSeekEnd}
           onChange={handleSeeking}
+          disabled={!durationDetermined}
         />
       </Slider>
     </Wrapper>
