@@ -24,7 +24,7 @@ const ListenNow = () => {
     qs.set('timezone', tz)
     qs.set('platform', 'web')
     qs.set('name', 'listen-now')
-    qs.set('types', 'artists,albums,playlists,stations')
+    qs.set('types', 'albums,playlists,stations')
     const {
       data: { data },
     } = await instance.api.music(`v1/me/recommendations?${qs.toString()}`)

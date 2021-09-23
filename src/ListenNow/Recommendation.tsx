@@ -153,6 +153,7 @@ const Resource = ({ value }: ResourceProps) => {
     throw new Error(`attributes not found in resource: ${JSON.stringify(value)}`)
   }
   const { artwork, url } = attributes
+  // TODO: some resource's artwork is optional, fallback to render the title?
   if (!artwork) {
     throw new Error(`artwork not found in resource: ${JSON.stringify(value)}`)
   }
