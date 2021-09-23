@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import useNowPlayingItem from '../useNowPlayingItem'
+import ProgressControl from './ProgressControl'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -41,7 +42,6 @@ const MediaItem = styled.div`
   border-radius: 2px;
   height: 100%;
   display: flex;
-  overflow: hidden;
 `
 
 const Artwork = styled.div`
@@ -56,7 +56,6 @@ const Meta = styled.dl`
   flex: 1;
   min-width: 0;
   text-align: center;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -65,6 +64,7 @@ const Meta = styled.dl`
   dd {
     margin: 0;
     overflow: hidden;
+    line-height: 1.1em;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -89,13 +89,6 @@ const VolumeControl = styled.div`
   }
 `
 
-const ProgressControl = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-`
-
 const Player = () => {
   const mediaItem = useNowPlayingItem()
   return (
@@ -114,9 +107,9 @@ const Player = () => {
               <dd>
                 {mediaItem.artistName} - {mediaItem.albumName}
               </dd>
+              <ProgressControl />
             </>
           )}
-          <ProgressControl></ProgressControl>
         </Meta>
       </MediaItem>
       <VolumeControl>
