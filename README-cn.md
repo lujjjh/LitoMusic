@@ -8,30 +8,30 @@
   <a href="https://github.com/lujjjh/lito/releases"><img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/lujjjh/lito?sort=semver" /></a>
 </p>
 <p align="center">
-  English
+  <a href="README.md">English</a>
   |
-  <a href="README-cn.md">中文</a>
+  中文
 </p>
 <p align="center">
   <img src="https://user-images.githubusercontent.com/3000535/134394206-27d49884-96ef-4197-9dc5-b4177b83c3cb.png" width="600" alt="Lito Music (screenshot)" />
 </p>
 <p align="center">
-  <strong>Lito (/laɪto/) Music</strong>, a lightweight Apple Music client for Windows, built with MusicKit JS, Edge WebView2 and React.
+  <strong>Lito (/laɪto/) Music</strong>，一个轻量级的 Windows Apple Music 客户端，使用 MusicKit JS、Edge WebView2 和 React 构建。
 </p>
 
-## System requirements
+## 系统需求
 
-- OS version ≥ Windows 10.
-- Edge WebView2 runtime (pre-installed in Windows 10 Insider Preview and Windows 11).  
-  If not installed, Lito Music will try to download and install it at the first launch.
+- 操作系统版本 ≥ Windows 10。
+- Edge WebView2 运行时 (预装于 Windows 10 Insider Preview 和 Windows 11)。  
+  若未安装，Lito Music 会尝试在首次启动时下载和安装。
 
-## Downloads
+## 下载
 
-Pre-releases are available [here][releases].
+与发行版本可[在此获取][releases]。
 
-## Build
+## 构建
 
-Rust and Node.js are required.
+需安装 Rust 和 Node.js。
 
 ```powershell
 npm install
