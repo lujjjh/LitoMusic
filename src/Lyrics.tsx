@@ -1,0 +1,98 @@
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import styled from 'styled-components'
+import Nothing from './Nothing'
+import { usePlaybackState, usePlayerRef } from './Player/ProgressControl'
+import useLyrics from './useLyrics'
+
+export const LyricsContext = React.createContext({ visible: false, setVisible(value: boolean) {} })
+
+export const useLyricsContext = () => React.useContext(LyricsContext)
+
+const Wrapper = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 50vh 0;
+  background-color: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  z-index: 10;
+  transition: opacity 0.1s ease;
+  opacity: 0;
+  pointer-events: none;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  overflow: auto;
+  -webkit-app-region: drag;
+  &.visible {
+    opacity: 1;
+    pointer-events: initial;
+  }
+  p {
+    width: fit-content;
+    margin: 2em auto;
+    padding: 0 50px;
+    line-height: 1em;
+    opacity: 0.5;
+    transition: opacity 0.1s ease;
+    -webkit-app-region: none;
+    &:hover,
+    &.active {
+      opacity: 1;
+    }
+  }
+`
+
+const Lyrics = () => {
+  const { visible } = useLyricsContext()
+  const playerRef = usePlayerRef()
+  const { currentTime } = usePlaybackState()
+  const { lyrics, error } = useLyrics()
+  // TODO: Algorithm should be optimized.
+  const currentTimeInMs = useMemo(() => {
+    if (!visible) return undefined
+    if (currentTime === undefined) return undefined
+    return currentTime * 1000
+  }, [visible, currentTime])
+  const activeIndex = useMemo(() => {
+    if (currentTimeInMs === undefined) return undefined
+    const lineIndex = lyrics?.lines.findIndex(({ begin, end }) => begin <= currentTimeInMs && currentTimeInMs <= end)
+    if (lineIndex === -1) return undefined
+    return lineIndex
+  }, [currentTimeInMs])
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (activeIndex === undefined) return
+    const wrapper = ref.current
+    if (!wrapper) return
+    const line = wrapper.getElementsByTagName('p')[activeIndex]
+    if (line) {
+      line.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    }
+  }, [activeIndex])
+  const handleClick = useCallback(
+    (index: number) => {
+      if (!playerRef) return
+      const line = lyrics?.lines[index]
+      if (!line) return
+      playerRef.currentTime = line.begin / 1000
+    },
+    [lyrics, playerRef]
+  )
+  return (
+    <Wrapper className={visible ? 'visible' : ''} ref={ref}>
+      {error && <Nothing />}
+      {lyrics?.lines.map((line, index) => {
+        return (
+          <p key={index} className={index === activeIndex ? 'active' : ''} onClick={() => handleClick(index)}>
+            {line.text}
+          </p>
+        )
+      })}
+    </Wrapper>
+  )
+}
+
+export default Lyrics

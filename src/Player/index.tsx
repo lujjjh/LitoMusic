@@ -76,6 +76,15 @@ const Meta = styled.dl`
     font-size: 12px;
     opacity: 0.6;
   }
+  dd:nth-child(1) {
+    opacity: 1;
+  }
+  dd:empty {
+    display: none;
+  }
+  dd:not(:empty) + dd {
+    display: none;
+  }
 `
 
 const VolumeControl = styled.div`
@@ -88,7 +97,6 @@ const VolumeControl = styled.div`
     -webkit-app-region: none;
   }
 `
-
 const Player = () => {
   const mediaItem = useNowPlayingItem()
   return (

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import useNowPlayingItem from '../useNowPlayingItem'
 
-const usePlayerRef = () => {
+export const usePlayerRef = () => {
   // Although we could use MusicKit's API to get the playback
   // progress, due to its precision, I would directly manipulate
   // the audio#apple-music-player element.
@@ -15,7 +15,7 @@ const usePlayerRef = () => {
   return playerElement
 }
 
-const usePlaybackState = () => {
+export const usePlaybackState = () => {
   const playerRef = usePlayerRef()
   const [duration, setDuration] = useState<number | undefined>()
   const [currentTime, setCurrentTime] = useState<number | undefined>()
@@ -165,7 +165,10 @@ const ProgressControl = () => {
     },
     [playerRef]
   )
-  const durationDetermined = useMemo(() => duration !== undefined && duration !== Infinity, [duration])
+  const durationDetermined = useMemo(
+    () => duration !== undefined && !isNaN(duration) && duration !== Infinity,
+    [duration]
+  )
   return (
     <Wrapper>
       <CurrentTime>{formatTime(currentTime)}</CurrentTime>
@@ -173,7 +176,7 @@ const ProgressControl = () => {
       <Slider>
         <input
           type="range"
-          max={duration}
+          max={durationDetermined ? duration : 0}
           step="any"
           value={durationDetermined ? currentTime : 0}
           style={{

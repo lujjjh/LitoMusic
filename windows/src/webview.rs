@@ -150,7 +150,7 @@ impl WebView {
                 None,
                 user_data_folder,
                 ICoreWebView2EnvironmentOptions::from(EnvironmentOptions::new(
-                    "--disable-web-security --disable-smooth-scrolling --enable-features=OverlayScrollbar",
+                    "--disable-web-security --enable-features=OverlayScrollbar",
                 )),
                 callback::CreateCoreWebView2EnvironmentCompletedHandler::create(
                     environment_completed_handler,

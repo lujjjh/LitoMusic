@@ -1,12 +1,16 @@
 {
   "en": {
     "translation": {
-      "listenNow": "Listen now"
+      "listenNow": "Listen now",
+      "nothing": "Nothing",
+      "fetchFailed": "Failed to load the data"
     }
   },
   "zh-CN": {
     "translation": {
-      "listenNow": "现在就听"
+      "listenNow": "现在就听",
+      "nothing": "没有数据",
+      "fetchFailed": "加载失败"
     }
   }
 }
