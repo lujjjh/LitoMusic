@@ -63,7 +63,10 @@ const Header = styled.div`
 
 const ResourceListScroll = styled.div`
   margin: -15px;
-  overflow: overlay;
+  overflow: hidden;
+  &:hover {
+    overflow: overlay;
+  }
 `
 
 const ResourceList = styled.div`
