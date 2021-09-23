@@ -131,12 +131,14 @@ impl MainForm {
         match msg {
             WM_USER_ICONNOTIFY => {
                 match l_param.0 as u32 {
-                    WindowsAndMessaging::WM_LBUTTONDBLCLK => {
+                    // TODO: Add context menu?
+                    WindowsAndMessaging::WM_LBUTTONUP | WindowsAndMessaging::WM_RBUTTONUP => {
                         self.show(true);
                         WindowsAndMessaging::ShowWindow(
                             self.h_wnd,
                             WindowsAndMessaging::SW_RESTORE,
                         );
+                        WindowsAndMessaging::SetForegroundWindow(h_wnd);
                     }
                     _ => {}
                 };
