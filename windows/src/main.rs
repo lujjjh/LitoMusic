@@ -7,6 +7,7 @@ mod form;
 mod form_nchittest;
 mod main_form;
 mod pwstr;
+mod shell;
 mod web_resource_handler;
 mod webview;
 mod webview_install_form;

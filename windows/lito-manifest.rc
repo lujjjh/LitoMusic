@@ -1,9 +1,5 @@
 #include "winuser.h"
 
-#define IDI_ICON 0x101
-
-#define IDI_ICON 0x101
-
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "lito.exe.manifest"
 
-IDI_ICON ICON "icon.ico"
+IDI_APPLICATION ICON "icon.ico"

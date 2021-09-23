@@ -19,16 +19,19 @@ use crate::{
     env::ParsedArgs,
     form::{self, center_window, dip_to_px},
     pwstr,
+    shell::NotificationIcon,
     web_resource_handler::WebResourceHandler,
     webview, APP_URL, DEBUG,
 };
 
 const CLASS_NAME: &str = "LitoMainForm";
 
-const WM_WEBVIEW_CREATE: u32 = WindowsAndMessaging::WM_USER;
+const WM_USER_WEBVIEW_CREATE: u32 = WindowsAndMessaging::WM_USER;
+const WM_USER_ICONNOTIFY: u32 = WindowsAndMessaging::WM_USER + 1;
 
 pub struct MainForm {
     h_wnd: HWND,
+    _notification_icon: NotificationIcon,
     composition: WebViewFormComposition,
     webview: webview::WebView,
 }
@@ -74,6 +77,8 @@ impl MainForm {
                 },
             )?;
         }
+        let notification_icon = NotificationIcon::new(h_wnd, Some(WM_USER_ICONNOTIFY));
+        notification_icon.show(true);
         let webview_composition = WebViewFormComposition::new(h_wnd)?;
         let mut webview = webview::WebView::new(
             h_wnd,
@@ -83,13 +88,14 @@ impl MainForm {
         webview.create(move || unsafe {
             WindowsAndMessaging::PostMessageW(
                 h_wnd,
-                WM_WEBVIEW_CREATE,
+                WM_USER_WEBVIEW_CREATE,
                 WPARAM::default(),
                 LPARAM::default(),
             );
         })?;
         Ok(Self {
             h_wnd,
+            _notification_icon: notification_icon,
             webview,
             composition: webview_composition,
         })
@@ -123,7 +129,20 @@ impl MainForm {
         let webview = &self.webview;
         webview.forward_mouse_messages(h_wnd, msg, w_param, l_param);
         match msg {
-            WM_WEBVIEW_CREATE => {
+            WM_USER_ICONNOTIFY => {
+                match l_param.0 as u32 {
+                    WindowsAndMessaging::WM_LBUTTONDBLCLK => {
+                        self.show(true);
+                        WindowsAndMessaging::ShowWindow(
+                            self.h_wnd,
+                            WindowsAndMessaging::SW_RESTORE,
+                        );
+                    }
+                    _ => {}
+                };
+                Some(LRESULT(0))
+            }
+            WM_USER_WEBVIEW_CREATE => {
                 let rect = form::get_client_rect(h_wnd).unwrap();
                 let width = rect.right - rect.left;
                 let height = rect.bottom - rect.top;
@@ -208,6 +227,10 @@ impl MainForm {
                 None
             }
             WindowsAndMessaging::WM_SIZE => {
+                let is_minimized = w_param.0 == WindowsAndMessaging::SIZE_MINIMIZED as usize;
+                if is_minimized {
+                    self.show(false);
+                }
                 self.composition.update(w_param).unwrap();
                 let width = (l_param.0 & 0xffff) as i32;
                 let height = ((l_param.0 >> 16) & 0xffff) as i32;
