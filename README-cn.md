@@ -23,7 +23,7 @@
 
 - 操作系统版本 ≥ Windows 10。
 - Edge WebView2 运行时 (预装于 Windows 10 Insider Preview 和 Windows 11)。  
-  若未安装，Lito Music 会尝试在首次启动时下载和安装。
+  若未安装，Lito Music 会在首次启动时尝试下载和安装。
 
 ## 下载
 
