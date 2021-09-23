@@ -1,4 +1,6 @@
+import { useCallback } from 'react'
 import styled from 'styled-components'
+import SimpleErrorBoundary from '../SimpleErrorBoundary'
 
 export interface RecommendationProps {
   value: PersonalRecommendation
@@ -77,13 +79,15 @@ const Recommendation = ({ value }: RecommendationProps) => {
   return (
     <Wrapper>
       <Header>{value.attributes.title?.stringForDisplay}</Header>
-      <ResourceListScroll>
-        <ResourceList>
-          {value.relationships.contents.data.map((value) => (
-            <Resource key={value.id} value={value} />
-          ))}
-        </ResourceList>
-      </ResourceListScroll>
+      <SimpleErrorBoundary>
+        <ResourceListScroll>
+          <ResourceList>
+            {value.relationships.contents.data.map((value) => (
+              <Resource key={value.id} value={value} />
+            ))}
+          </ResourceList>
+        </ResourceListScroll>
+      </SimpleErrorBoundary>
     </Wrapper>
   )
 }
@@ -144,13 +148,24 @@ const PlayButton = styled.button`
 `
 
 const Resource = ({ value }: ResourceProps) => {
-  const { artwork, url } = value.attributes
+  const { attributes } = value
+  if (!attributes) {
+    throw new Error(`attributes not found in resource: ${JSON.stringify(value)}`)
+  }
+  const { artwork, url } = attributes
+  // TODO: some resource's artwork is optional, fallback to render the title?
+  if (!artwork) {
+    throw new Error(`artwork not found in resource: ${JSON.stringify(value)}`)
+  }
+  if (!url) {
+    throw new Error(`url not found in resource: ${JSON.stringify(value)}`)
+  }
   const artworkUrl = artwork.url.replace('{w}', '320').replace('{h}', '320').replace('{c}', 'cc').replace('{f}', 'webp')
-  const play = async () => {
+  const play = useCallback(async () => {
     const music = MusicKit.getInstance()
     await music.setQueue({ url })
     await music.play()
-  }
+  }, [])
   return (
     <ResourceWrapper
       style={
