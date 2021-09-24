@@ -23,6 +23,10 @@
 
 ## 下载
 
+> 注意：如果 Windows Defender 可能会产生误报，提示这是恶意软件。代码签名应当可以解决问题，但[其价格](https://www.google.com/search?q=code+signing+certificates+price)对开源软件开发者并不友好。
+>
+> 如果你对此感到介意，欢迎[在自己的机器上构建](#构建)。
+
 与发行版本可[在此获取][releases]。
 
 ## 特性
