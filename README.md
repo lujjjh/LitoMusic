@@ -12,12 +12,8 @@
   |
   <a href="README-cn.md">中文</a>
 </p>
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/3000535/134394206-27d49884-96ef-4197-9dc5-b4177b83c3cb.png" width="600" alt="Lito Music (screenshot)" />
-</p>
-<p align="center">
-  <strong>Lito (/laɪto/) Music</strong>, a lightweight Apple Music client for Windows, built with MusicKit JS, Edge WebView2 and React.
-</p>
+
+**Lito (/laɪto/) Music** is a lightweight Apple Music client for Windows, built with MusicKit JS, Edge WebView2 and React.
 
 ## System requirements
 
@@ -28,6 +24,17 @@
 ## Downloads
 
 Pre-releases are available [here][releases].
+
+## Features
+
+### Listen now
+
+<img src="https://user-images.githubusercontent.com/3000535/134614721-7121c8d3-87d1-41cc-af19-9c506c2380b3.png" width="600" alt="Lito Music (listen now)" />
+
+
+### Time-synced lyrics
+
+<img src="https://user-images.githubusercontent.com/3000535/134615011-206617c5-d958-47d5-aef3-d9d541f366f7.png" width="600" alt="Lito Music (lyrics)" />
 
 ## Build
 
