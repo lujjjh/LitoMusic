@@ -37,6 +37,7 @@ const Controls = styled.div`
 
 const MediaItem = styled.div`
   flex: 4;
+  min-width: 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background-color: #fff;
   border-radius: 2px;
