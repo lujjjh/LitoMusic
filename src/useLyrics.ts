@@ -27,9 +27,9 @@ const parseLyrics = (xmlString: string): Lyrics => {
 }
 
 const parseTime = (timeString: string) => {
-  const match = /^(?:(\d+):)?(\d+).(\d+)/.exec(timeString)
+  const match = /^(?:(?:(\d+):)?(\d+):)?(\d+).(\d+)/.exec(timeString)
   if (!match) return null
-  return +(match[1] || 0) * 60000 + +match[2] * 1000 + +match[3]
+  return +(match[1] || 0) * 60 * 60 * 1000 + +(match[2] || 0) * 60 * 1000 + +match[3] * 1000 + +match[4]
 }
 
 const useLyrics = () => {

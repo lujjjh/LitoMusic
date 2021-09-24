@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Nothing from './Nothing'
 import { usePlaybackState, usePlayerRef } from './Player/ProgressControl'
@@ -46,14 +46,16 @@ const BlurWrapper = styled.div`
     line-height: 1.5em;
     background-clip: text;
     opacity: 0.4;
-    filter: blur(1px);
     transition: opacity 0.3s ease, filter 0.3s ease;
     -webkit-app-region: none;
-    &:hover,
-    &.active {
-      opacity: 1;
-      filter: none;
-    }
+  }
+  &.blur-behind p {
+    filter: blur(1px);
+  }
+  p:hover,
+  p.active {
+    opacity: 1;
+    filter: none;
   }
 `
 
@@ -76,6 +78,9 @@ const Lyrics = () => {
     return lineIndex
   }, [currentTimeInMs])
   const ref = useRef<HTMLDivElement>(null)
+  const [lastScrollAt, setLastScrollAt] = useState(0)
+  const blurBehindDelayAfterScroll = 500
+  const [blurBehind, setBlurBehind] = useState(true)
   useEffect(() => {
     if (activeIndex === undefined) return
     const wrapper = ref.current
@@ -83,8 +88,15 @@ const Lyrics = () => {
     const line = wrapper.getElementsByTagName('p')[activeIndex]
     if (line) {
       line.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      if (Date.now() - lastScrollAt >= blurBehindDelayAfterScroll) {
+        setBlurBehind(true)
+      }
     }
-  }, [activeIndex])
+  }, [activeIndex, lastScrollAt])
+  const handleWheel = useCallback(() => {
+    setLastScrollAt(Math.floor(Date.now() / 100) * 100)
+    setBlurBehind(false)
+  }, [])
   const handleClick = useCallback(
     (index: number) => {
       if (!playerRef) return
@@ -94,6 +106,7 @@ const Lyrics = () => {
     },
     [lyrics, playerRef]
   )
+  console.log(blurBehind)
   return (
     <Wrapper
       className={visible ? 'visible' : ''}
@@ -108,7 +121,7 @@ const Lyrics = () => {
           : 'none',
       }}
     >
-      <BlurWrapper>
+      <BlurWrapper className={blurBehind ? 'blur-behind' : ''} onWheel={handleWheel}>
         {error && <Nothing />}
         {lyrics?.lines.map((line, index) => {
           return (
