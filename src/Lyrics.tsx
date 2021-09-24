@@ -16,6 +16,7 @@ const Wrapper = styled.div`
   right: 0;
   bottom: 0;
   background-size: cover;
+  background-color: #fff;
   z-index: 10;
   transition: opacity 0.1s ease;
   opacity: 0;
@@ -104,7 +105,7 @@ const Lyrics = () => {
               .replace('{h}', '2000')
               .replace('{c}', 'cc')
               .replace('{f}', 'webp')}'`
-          : '#fff',
+          : 'none',
       }}
     >
       <BlurWrapper>
