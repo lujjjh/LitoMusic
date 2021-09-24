@@ -23,13 +23,11 @@
 
 ## Downloads
 
-> NOTE: If Windows Defender complaints that this is a malware, it's a false positive.
-> I believe code signing would solve this issue; however, [the price](https://www.google.com/search?q=code+signing+certificates+price)
-> is not friendly to an open source developer.
->
-> If you are concerned about it, feel free to [build it on your own machine](#build).
+> NOTE: Windows Defender might say the pre-compiled binary is a malware. It's just a false positive.
+> Code signing could solve this issue; however, [the price](https://www.google.com/search?q=code+signing+certificates+price)
+> is not friendly to an open source developer. If you are concerned about it, please feel free to [build it on your own machine](#build).
 
-Pre-releases are available [here][releases].
+Pre-compiled binaries are available [here][releases].
 
 ## Features
 
