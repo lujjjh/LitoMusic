@@ -106,7 +106,6 @@ const Lyrics = () => {
     },
     [lyrics, playerRef]
   )
-  console.log(blurBehind)
   return (
     <Wrapper
       className={visible ? 'visible' : ''}
