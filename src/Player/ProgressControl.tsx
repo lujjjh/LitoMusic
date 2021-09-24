@@ -122,21 +122,25 @@ const formatTime = (secs: number | undefined) => {
 
 const ProgressControl = () => {
   const playerRef = usePlayerRef()
-  const { duration, currentTime } = usePlaybackState()
-  const remainingTime = useMemo(() => {
-    if (duration !== undefined && currentTime !== undefined) {
-      // pad the duration, so that currentTime and duration
-      // would be updated at the same time
-      let durationPadded = Math.ceil(duration)
-      return durationPadded - currentTime
+  const [duration, setDuration] = useState(0)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [remainingTime, setRemainingTime] = useState(0)
+  const [progress, setProgress] = useState(0)
+  useEffect(() => {
+    const instance = MusicKit.getInstance()
+    const update = () => {
+      setDuration(instance.currentPlaybackDuration)
+      setCurrentTime(instance.currentPlaybackTime)
+      setRemainingTime(instance.currentPlaybackTimeRemaining)
+      setProgress(instance.currentPlaybackProgress)
     }
-    return undefined
-  }, [duration, currentTime])
-  const progress = useMemo(() => {
-    if (duration !== undefined && currentTime !== undefined) {
-      return Math.round((currentTime * 100000) / duration) / 1000
+    instance.addEventListener('playbackDurationDidChange', update)
+    instance.addEventListener('playbackTimeDidChange', update)
+    return () => {
+      instance.removeEventListener('playbackDurationDidChange', update)
+      instance.removeEventListener('playbackTimeDidChange', update)
     }
-  }, [duration, currentTime])
+  }, [])
   const [shouldContinueToPlay, setShouldContinueToPlay] = useState(false)
   const handleSeekStart = useCallback(
     (event: React.MouseEvent<HTMLInputElement>) => {
@@ -165,10 +169,6 @@ const ProgressControl = () => {
     },
     [playerRef]
   )
-  const durationDetermined = useMemo(
-    () => duration !== undefined && !isNaN(duration) && duration !== Infinity,
-    [duration]
-  )
   return (
     <Wrapper>
       <CurrentTime>{formatTime(currentTime)}</CurrentTime>
@@ -176,16 +176,16 @@ const ProgressControl = () => {
       <Slider>
         <input
           type="range"
-          max={durationDetermined ? duration : 0}
+          max={duration}
           step="any"
-          value={durationDetermined ? currentTime : 0}
+          value={currentTime}
           style={{
-            ['--progress' as any]: String(progress || 0) + '%',
+            ['--progress' as any]: progress * 100 + '%',
           }}
           onMouseDown={handleSeekStart}
           onMouseUp={handleSeekEnd}
           onChange={handleSeeking}
-          disabled={!durationDetermined}
+          disabled={duration === 0}
         />
       </Slider>
     </Wrapper>

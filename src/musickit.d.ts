@@ -13,6 +13,10 @@ declare namespace MusicKit {
 
   interface MusicKitInstance {
     nowPlayingItem: MediaItem | undefined
+    currentPlaybackDuration: number
+    currentPlaybackProgress: number
+    currentPlaybackTime: number
+    currentPlaybackTimeRemaining: number
   }
 }
 

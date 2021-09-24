@@ -11,7 +11,7 @@ const useAuthorized = () => {
     return () => {
       instance.removeEventListener(MusicKit.Events.authorizationStatusDidChange, handleAuthorizationStatusDidChange)
     }
-  })
+  }, [])
   return authorized
 }
 

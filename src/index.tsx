@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`${css`
     font-size: 13px;
     font-family: system-ui;
     background-color: transparent;
+    -webkit-font-smoothing: antialiased;
   }
 
   * {
