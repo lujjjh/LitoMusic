@@ -100,7 +100,7 @@ impl WebViewInstallForm {
                     lp_buffer,
                     cb_buffer,
                     0,
-                    std::mem::transmute::<_, Com::IBindStatusCallback>(&&BindStatusCallback::new(
+                    Com::IBindStatusCallback::from(BindStatusCallback::new(
                         progress_bar_h_wnd,
                     )),
                 ) {
