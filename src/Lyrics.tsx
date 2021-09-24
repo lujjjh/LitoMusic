@@ -101,8 +101,8 @@ const Lyrics = () => {
       style={{
         backgroundImage: nowPlayingItem?.artworkURL
           ? `url('${nowPlayingItem.artworkURL
-              .replace('{w}', '2000')
-              .replace('{h}', '2000')
+              .replace('{w}', '256')
+              .replace('{h}', '256')
               .replace('{c}', 'cc')
               .replace('{f}', 'webp')}'`
           : 'none',
