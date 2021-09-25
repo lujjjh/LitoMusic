@@ -67,6 +67,10 @@ const ResourceListScroll = styled.div`
   &:hover {
     overflow: overlay;
   }
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 `
 
 const ResourceList = styled.div`
