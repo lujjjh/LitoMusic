@@ -21,7 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B71F1E8326FE0FEB00A9DAA2 /* LitoMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LitoMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B71F1E8326FE0FEB00A9DAA2 /* Lito Music.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lito Music.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B71F1E8626FE0FEB00A9DAA2 /* LitoMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LitoMusicApp.swift; sourceTree = "<group>"; };
 		B71F1E8826FE0FEB00A9DAA2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B71F1E8A26FE0FED00A9DAA2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -62,7 +62,7 @@
 		B71F1E8426FE0FEB00A9DAA2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B71F1E8326FE0FEB00A9DAA2 /* LitoMusic.app */,
+				B71F1E8326FE0FEB00A9DAA2 /* Lito Music.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,7 +121,7 @@
 				B71F1EA626FF1BEE00A9DAA2 /* Gzip */,
 			);
 			productName = LitoMusic;
-			productReference = B71F1E8326FE0FEB00A9DAA2 /* LitoMusic.app */;
+			productReference = B71F1E8326FE0FEB00A9DAA2 /* Lito Music.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -322,7 +322,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Lito Music";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -332,7 +331,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lujjjh.LitoMusic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Lito Music";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LitoMusic/LitoMusic-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -355,7 +354,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Lito Music";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -365,7 +363,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lujjjh.LitoMusic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Lito Music";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LitoMusic/LitoMusic-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
