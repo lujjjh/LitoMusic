@@ -7,7 +7,7 @@ const AdditionalButtons = styled.div`
   top: 28px;
   z-index: 100;
   > * {
-    -webkit-app-region: none;
+    --app-region: none;
   }
 `
 const ControlButtons = () => {

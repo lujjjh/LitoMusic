@@ -34,7 +34,7 @@ const BlurWrapper = styled.div`
   right: 0;
   bottom: 0;
   backdrop-filter: blur(300px);
-  -webkit-app-region: drag;
+  --app-region: drag;
   overflow: auto;
   font-weight: bold;
   padding: 50vh 0;
@@ -47,7 +47,7 @@ const BlurWrapper = styled.div`
     background-clip: text;
     opacity: 0.4;
     transition: opacity 0.3s ease, filter 0.3s ease;
-    -webkit-app-region: none;
+    --app-region: none;
   }
   &.blur-behind p {
     filter: blur(1px);

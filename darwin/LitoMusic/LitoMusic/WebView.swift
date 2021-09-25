@@ -26,9 +26,13 @@ struct WebView : NSViewRepresentable {
 
     func makeNSView(context: Context) -> WKWebView {
         webView.uiDelegate = context.coordinator
+        webView.navigationDelegate = context.coordinator
+        webView.setValue(false, forKey: "drawsBackground")
         if disableWebSecurity {
             WDBSetWebSecurityEnabled(webView.configuration.preferences, false)
         }
+        webView.configuration.userContentController.add(context.coordinator, name: "dragController")
+        webView.configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
         return webView
     }
 
@@ -40,7 +44,7 @@ struct WebView : NSViewRepresentable {
         Coordinator(self)
     }
 
-    class Coordinator: NSObject, WKUIDelegate {
+    class Coordinator: NSObject, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler {
         let parent: WebView
 
         init(_ parent: WebView) {
@@ -59,6 +63,29 @@ struct WebView : NSViewRepresentable {
         func webViewDidClose(_ webView: WKWebView) {
             if let window = self.parent.window {
                 window.close()
+            }
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            webView.evaluateJavaScript("""
+                document.addEventListener("mousedown", event => {
+                    if (event.button !== 0) return
+                    const appRegion = window.getComputedStyle(event.target).getPropertyValue('--app-region')
+                    if (appRegion === 'drag') {
+                        event.preventDefault()
+                        event.stopPropagation()
+                        window.webkit.messageHandlers.dragController?.postMessage?.('mouseDown')
+                    }
+                })
+            """)
+        }
+
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            if let window = NSApplication.shared.mainWindow {
+                let nsEvent = NSEvent.mouseEvent(with: .leftMouseDown, location: NSEvent.mouseLocation,
+                                                 modifierFlags: .init(rawValue: 0), timestamp: 0, windowNumber: 0,
+                                                 context: nil, eventNumber: 0, clickCount: 1, pressure: 0)!
+                window.performDrag(with: nsEvent)
             }
         }
     }

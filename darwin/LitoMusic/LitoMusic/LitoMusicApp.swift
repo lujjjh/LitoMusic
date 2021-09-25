@@ -17,6 +17,8 @@ struct LitoMusicApp: App {
                 .edgesIgnoringSafeArea(.all)
                 .frame(minWidth: 1024, idealWidth: 1024,
                        minHeight: 768, idealHeight: 768)
+                .background(VisualEffectView(material: .sidebar, blendingMode: .behindWindow).ignoresSafeArea())
+                .preferredColorScheme(.light)
         }
         .windowStyle(HiddenTitleBarWindowStyle())
     }

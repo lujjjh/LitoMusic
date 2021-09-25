@@ -20,7 +20,7 @@ const Wrapper = styled.div`
     rgba(255, 255, 255, 0.45) 0px 1px 1px 0px inset;
   &,
   & * {
-    -webkit-app-region: drag;
+    --app-region: drag;
   }
 `
 
@@ -31,7 +31,7 @@ const Controls = styled.div`
   align-items: center;
   justify-content: flex-end;
   > * {
-    -webkit-app-region: none;
+    --app-region: none;
   }
 `
 
@@ -95,7 +95,7 @@ const VolumeControl = styled.div`
   align-items: center;
   justify-content: flex-start;
   > * {
-    -webkit-app-region: none;
+    --app-region: none;
   }
 `
 const Player = () => {

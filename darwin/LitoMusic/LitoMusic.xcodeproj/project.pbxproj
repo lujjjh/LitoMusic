@@ -14,6 +14,7 @@
 		B71F1E9626FE101700A9DAA2 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71F1E9526FE101700A9DAA2 /* WebView.swift */; };
 		B71F1E9C26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m in Sources */ = {isa = PBXBuildFile; fileRef = B71F1E9B26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m */; };
 		B71F1E9E26FE1E3500A9DAA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71F1E9D26FE1E3500A9DAA2 /* AppDelegate.swift */; };
+		B71F1EA026FE2DE600A9DAA2 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71F1E9F26FE2DE600A9DAA2 /* VisualEffectView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		B71F1E9A26FE141C00A9DAA2 /* LitoMusic-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LitoMusic-Bridging-Header.h"; sourceTree = "<group>"; };
 		B71F1E9B26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WDBSetWebSecurityEnabled.m; sourceTree = "<group>"; };
 		B71F1E9D26FE1E3500A9DAA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B71F1E9F26FE2DE600A9DAA2 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				B71F1E9B26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m */,
 				B71F1E9A26FE141C00A9DAA2 /* LitoMusic-Bridging-Header.h */,
 				B71F1E9D26FE1E3500A9DAA2 /* AppDelegate.swift */,
+				B71F1E9F26FE2DE600A9DAA2 /* VisualEffectView.swift */,
 			);
 			path = LitoMusic;
 			sourceTree = "<group>";
@@ -166,6 +169,7 @@
 				B71F1E8726FE0FEB00A9DAA2 /* LitoMusicApp.swift in Sources */,
 				B71F1E9E26FE1E3500A9DAA2 /* AppDelegate.swift in Sources */,
 				B71F1E9C26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m in Sources */,
+				B71F1EA026FE2DE600A9DAA2 /* VisualEffectView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
