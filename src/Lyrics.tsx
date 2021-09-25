@@ -35,10 +35,13 @@ const BlurWrapper = styled.div`
   bottom: 0;
   backdrop-filter: blur(300px);
   --app-region: drag;
-  overflow: auto;
+  overflow: overlay;
   font-weight: bold;
   padding: 50vh 0;
   font-size: 24px;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
   p {
     width: fit-content;
     margin: 1.5em 20vw;
@@ -79,7 +82,7 @@ const Lyrics = () => {
   }, [currentTimeInMs])
   const ref = useRef<HTMLDivElement>(null)
   const [lastScrollAt, setLastScrollAt] = useState(0)
-  const blurBehindDelayAfterScroll = 500
+  const blurBehindDelayAfterScroll = 1000
   const [blurBehind, setBlurBehind] = useState(true)
   useEffect(() => {
     if (activeIndex === undefined) return
@@ -87,8 +90,8 @@ const Lyrics = () => {
     if (!wrapper) return
     const line = wrapper.getElementsByTagName('p')[activeIndex]
     if (line) {
-      line.scrollIntoView({ block: 'center', behavior: 'smooth' })
       if (Date.now() - lastScrollAt >= blurBehindDelayAfterScroll) {
+        line.scrollIntoView({ block: 'center', behavior: 'smooth' })
         setBlurBehind(true)
       }
     }
