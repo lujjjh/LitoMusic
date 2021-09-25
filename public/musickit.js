@@ -9326,8 +9326,8 @@
         (this.keyServerURL = e['hls-key-server-url'])
     }
     dispatchKeyError(e) {
-      console.error(MKError.MEDIA_KEY + ' error in dispatchKeyError:', e),
-        this.dispatchEvent(Wr.playbackSessionError, new MKError(MKError.MEDIA_KEY, e))
+      console.error(MKError.MEDIA_KEY + ' error in dispatchKeyError:', e) /*,
+        this.dispatchEvent(Wr.playbackSessionError, new MKError(MKError.MEDIA_KEY, e))*/
     }
     dispatchSessionError(e) {
       this.dispatchEvent(Wr.playbackSessionError, new MKError(MKError.MEDIA_SESSION, e))
