@@ -27,7 +27,9 @@ const Controls = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  --app-region: none;
+  > * {
+    --app-region: none;
+  }
 `
 
 const MediaItem = styled.div`
