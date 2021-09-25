@@ -19,7 +19,7 @@ struct LitoMusicApp: App {
                        minHeight: 768, idealHeight: 768)
                 .background(VisualEffectView(material: .sidebar, blendingMode: .behindWindow).ignoresSafeArea())
                 .preferredColorScheme(.light)
-                .toolbar { Text("") }
+                .toolbar { Text(" ") }
         }
         .windowStyle(HiddenTitleBarWindowStyle())
         // TODO: Make toolbar exactly 60dip in height so that traffic lights could be vertically centered.

@@ -12,27 +12,30 @@ struct WebView : NSViewRepresentable {
     let window: NSWindow?
     let request: URLRequest
     let configuration: WKWebViewConfiguration
-    let disableWebSecurity: Bool
 
     let webView: WKWebView
 
-    init (window: NSWindow? = nil, request: URLRequest, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), disableWebSecurity: Bool = false) {
+    init (window: NSWindow? = nil, request: URLRequest, configuration: WKWebViewConfiguration = WKWebViewConfiguration(),
+          disableWebSecurity: Bool = false, transparent: Bool = false, injectDragController: Bool = false) {
         self.window = window
         self.request = request
         self.configuration = configuration
-        self.disableWebSecurity = disableWebSecurity
         self.webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), configuration: configuration)
+        if disableWebSecurity {
+            WDBSetWebSecurityEnabled(webView.configuration.preferences, false)
+        }
+        if transparent {
+            webView.setValue(false, forKey: "drawsBackground")
+        }
+        if injectDragController {
+            webView.configuration.userContentController.add(DragController(), name: "dragController")
+        }
+        webView.configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
     }
 
     func makeNSView(context: Context) -> WKWebView {
         webView.uiDelegate = context.coordinator
         webView.navigationDelegate = context.coordinator
-        webView.setValue(false, forKey: "drawsBackground")
-        if disableWebSecurity {
-            WDBSetWebSecurityEnabled(webView.configuration.preferences, false)
-        }
-        webView.configuration.userContentController.add(context.coordinator, name: "dragController")
-        webView.configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
         return webView
     }
 
@@ -44,7 +47,7 @@ struct WebView : NSViewRepresentable {
         Coordinator(self)
     }
 
-    class Coordinator: NSObject, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler {
+    class Coordinator : NSObject, WKUIDelegate, WKNavigationDelegate {
         let parent: WebView
 
         init(_ parent: WebView) {
@@ -52,18 +55,19 @@ struct WebView : NSViewRepresentable {
         }
 
         func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 800, height: 600), styleMask: [.titled, .closable, .fullSizeContentView], backing: .buffered, defer: false)
-            let newWebView = WebView(window: window, request: navigationAction.request, configuration: configuration)
-            window.contentView = NSHostingView(rootView: newWebView)
-            window.center()
-            window.makeKeyAndOrderFront(nil)
-            return newWebView.webView
-        }
+            let view = WKWebView(frame: .init(x: 0, y: 0, width: 800, height: 600), configuration: configuration)
+            view.navigationDelegate = self
+            view.uiDelegate = self
 
-        func webViewDidClose(_ webView: WKWebView) {
-            if let window = self.parent.window {
-                window.close()
-            }
+            let viewController = NSViewController()
+            viewController.view = view
+
+            let window = NSWindow(contentViewController: viewController)
+            window.center()
+
+            webView.window?.contentViewController?.presentAsSheet(viewController)
+
+            return view
         }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -80,6 +84,12 @@ struct WebView : NSViewRepresentable {
             """)
         }
 
+        func webViewDidClose(_ webView: WKWebView) {
+            webView.window?.close()
+        }
+    }
+
+    class DragController : NSObject, WKScriptMessageHandler {
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             if let window = NSApplication.shared.mainWindow {
                 let nsEvent = NSEvent.mouseEvent(with: .leftMouseDown, location: NSEvent.mouseLocation,

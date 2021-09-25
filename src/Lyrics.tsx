@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   background-size: cover;
   background-color: #000;
   z-index: 10;
-  transition: opacity 0.1s ease;
+  transition: opacity 0.5s ease;
   opacity: 0;
   pointer-events: none;
   &.visible {
@@ -69,7 +69,9 @@ const Lyrics = () => {
   const setTheme = useSetTheme()
   useEffect(() => {
     if (visible) {
-      setTheme(darkTheme)
+      setTimeout(() => {
+        setTheme(darkTheme)
+      }, 500)
     } else {
       setTheme(lightTheme)
     }

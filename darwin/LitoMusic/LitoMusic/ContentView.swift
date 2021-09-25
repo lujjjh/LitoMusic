@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        WebView(request: URLRequest(url: URL(string: "http://127.0.0.1:3000")!), disableWebSecurity: true)
+        WebView(request: URLRequest(url: URL(string: "http://127.0.0.1:3000")!),
+                disableWebSecurity: true, transparent: true, injectDragController: true)
     }
 }
