@@ -20,6 +20,10 @@ struct WebView : NSViewRepresentable {
         self.window = window
         self.request = request
         self.configuration = configuration
+#if !DEBUG
+        // TODO: Remove this hack if possible. (It seems MusicKit JS only works under http(s) scheme.)
+        configuration.setURLSchemeHandler(LitoSchemeHandler(), forURLScheme: "http")
+#endif
         self.webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), configuration: configuration)
         if disableWebSecurity {
             WDBSetWebSecurityEnabled(webView.configuration.preferences, false)
@@ -82,6 +86,14 @@ struct WebView : NSViewRepresentable {
                     }
                 })
             """)
+
+#if !DEBUG
+            webView.evaluateJavaScript("""
+                document.addEventListener("contextmenu", event => {
+                    event.preventDefault()
+                })
+            """)
+#endif
         }
 
         func webViewDidClose(_ webView: WKWebView) {
