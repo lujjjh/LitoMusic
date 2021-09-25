@@ -50,6 +50,7 @@ const Logo = styled.div`
   --app-region: drag;
   margin-bottom: 10px;
   color: #000;
+  opacity: ${isMacOS() ? 0 : 1};
 `
 
 const Sidebar = () => {
