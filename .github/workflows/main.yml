@@ -15,3 +15,9 @@ jobs:
         run: npm i
       - name: Release build
         run: npm run build:windows
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: lito.exe
+          path: windows/target/x86_64-pc-windows-msvc/release/lito.exe
+          retention-days: 5
