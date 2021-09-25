@@ -12,6 +12,7 @@ struct WebView : NSViewRepresentable {
     let window: NSWindow?
     let request: URLRequest
     let configuration: WKWebViewConfiguration
+    let windowDelegate = MainWindowDelegate()
 
     let webView: WKWebView
 
@@ -40,6 +41,10 @@ struct WebView : NSViewRepresentable {
     func makeNSView(context: Context) -> WKWebView {
         webView.uiDelegate = context.coordinator
         webView.navigationDelegate = context.coordinator
+        // Quick and dirty...To avoid main window being destoryed.
+        DispatchQueue.main.async {
+            webView.window?.delegate = windowDelegate
+        }
         return webView
     }
 
@@ -109,6 +114,13 @@ struct WebView : NSViewRepresentable {
                                                  context: nil, eventNumber: 0, clickCount: 1, pressure: 0)!
                 window.performDrag(with: nsEvent)
             }
+        }
+    }
+
+    class MainWindowDelegate : NSObject, NSWindowDelegate {
+        func windowShouldClose(_ sender: NSWindow) -> Bool {
+            NSApp.hide(nil)
+            return false
         }
     }
 }
