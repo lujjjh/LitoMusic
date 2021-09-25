@@ -1,20 +1,25 @@
 import styled from 'styled-components'
 import LyricsButton from './LyricsButton'
+import { isMacOS } from './utils'
 
-const AdditionalButtons = styled.div`
+const Wrapper = styled.div`
   position: fixed;
   right: 5px;
-  top: 28px;
+  top: 0;
+  height: 60px;
+  display: flex;
+  align-items: ${isMacOS() ? 'center' : 'flex-end'};
   z-index: 100;
+  --app-region: drag;
   > * {
     --app-region: none;
   }
 `
 const ControlButtons = () => {
   return (
-    <AdditionalButtons>
+    <Wrapper>
       <LyricsButton />
-    </AdditionalButtons>
+    </Wrapper>
   )
 }
 

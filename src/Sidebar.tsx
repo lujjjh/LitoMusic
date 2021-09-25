@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import logo from '../logo.svg'
 import NavButton from './NavButton'
+import { isMacOS } from './utils'
 
 const Wrapper = styled.div`
   display: flex;
@@ -9,7 +10,7 @@ const Wrapper = styled.div`
   width: 220px;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  background-color: ${navigator.userAgent.includes('Mac OS X') ? 'transparent' : `rgba(249, 249, 249, 0.96)`};
+  background-color: ${isMacOS() ? 'transparent' : `rgba(249, 249, 249, 0.96)`};
 
   ul {
     flex: 1;
