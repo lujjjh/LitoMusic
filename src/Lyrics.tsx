@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { useSetTheme } from './GlobalThemeContext'
 import Nothing from './Nothing'
 import { usePlaybackState, usePlayerRef } from './Player/ProgressControl'
+import { darkTheme, lightTheme } from './themes'
 import useLyrics from './useLyrics'
 import useNowPlayingItem from './useNowPlayingItem'
 
@@ -16,7 +18,7 @@ const Wrapper = styled.div`
   right: 0;
   bottom: 0;
   background-size: cover;
-  background-color: #fff;
+  background-color: #000;
   z-index: 10;
   transition: opacity 0.1s ease;
   opacity: 0;
@@ -64,6 +66,14 @@ const BlurWrapper = styled.div`
 
 const Lyrics = () => {
   const { visible } = useLyricsContext()
+  const setTheme = useSetTheme()
+  useEffect(() => {
+    if (visible) {
+      setTheme(darkTheme)
+    } else {
+      setTheme(lightTheme)
+    }
+  }, [visible, setTheme])
   const nowPlayingItem = useNowPlayingItem()
   const playerRef = usePlayerRef()
   const { currentTime } = usePlaybackState()
