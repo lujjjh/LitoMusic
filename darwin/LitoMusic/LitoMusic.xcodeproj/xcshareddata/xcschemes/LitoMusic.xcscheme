@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B71F1E8226FE0FEB00A9DAA2"
-               BuildableName = "LitoMusic.app"
+               BuildableName = "Lito Music.app"
                BlueprintName = "LitoMusic"
                ReferencedContainer = "container:LitoMusic.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B71F1E8226FE0FEB00A9DAA2"
-            BuildableName = "LitoMusic.app"
+            BuildableName = "Lito Music.app"
             BlueprintName = "LitoMusic"
             ReferencedContainer = "container:LitoMusic.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B71F1E8226FE0FEB00A9DAA2"
-            BuildableName = "LitoMusic.app"
+            BuildableName = "Lito Music.app"
             BlueprintName = "LitoMusic"
             ReferencedContainer = "container:LitoMusic.xcodeproj">
          </BuildableReference>
