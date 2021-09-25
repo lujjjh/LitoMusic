@@ -32,3 +32,9 @@ jobs:
         run: npm i
       - name: Release build
         run: npm run build:darwin
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: LitoMusic.dmg
+          path: darwin/build/LitoMusic.dmg
+          retention-days: 5
