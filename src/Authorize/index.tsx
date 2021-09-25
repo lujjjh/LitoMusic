@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-app-region: drag;
+  --app-region: drag;
 `
 
 const Authorize = () => {

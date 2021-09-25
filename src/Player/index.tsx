@@ -18,10 +18,7 @@ const Wrapper = styled.div`
   backdrop-filter: saturate(50%) blur(20px);
   box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 0px 0px, rgba(0, 0, 0, 0.07) 0px 1px 3px 0px,
     rgba(255, 255, 255, 0.45) 0px 1px 1px 0px inset;
-  &,
-  & * {
-    -webkit-app-region: drag;
-  }
+  --app-region: drag;
 `
 
 const Controls = styled.div`
@@ -31,7 +28,7 @@ const Controls = styled.div`
   align-items: center;
   justify-content: flex-end;
   > * {
-    -webkit-app-region: none;
+    --app-region: none;
   }
 `
 
@@ -95,7 +92,7 @@ const VolumeControl = styled.div`
   align-items: center;
   justify-content: flex-start;
   > * {
-    -webkit-app-region: none;
+    --app-region: none;
   }
 `
 const Player = () => {

@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { useSetTheme } from './GlobalThemeContext'
 import Nothing from './Nothing'
 import { usePlaybackState, usePlayerRef } from './Player/ProgressControl'
+import { darkTheme, lightTheme } from './themes'
 import useLyrics from './useLyrics'
 import useNowPlayingItem from './useNowPlayingItem'
 
@@ -16,9 +18,9 @@ const Wrapper = styled.div`
   right: 0;
   bottom: 0;
   background-size: cover;
-  background-color: #fff;
+  background-color: #000;
   z-index: 10;
-  transition: opacity 0.1s ease;
+  transition: opacity 0.5s ease;
   opacity: 0;
   pointer-events: none;
   &.visible {
@@ -34,11 +36,14 @@ const BlurWrapper = styled.div`
   right: 0;
   bottom: 0;
   backdrop-filter: blur(300px);
-  -webkit-app-region: drag;
-  overflow: auto;
+  --app-region: drag;
+  overflow: overlay;
   font-weight: bold;
   padding: 50vh 0;
   font-size: 24px;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
   p {
     width: fit-content;
     margin: 1.5em 20vw;
@@ -47,7 +52,7 @@ const BlurWrapper = styled.div`
     background-clip: text;
     opacity: 0.4;
     transition: opacity 0.3s ease, filter 0.3s ease;
-    -webkit-app-region: none;
+    --app-region: none;
   }
   &.blur-behind p {
     filter: blur(1px);
@@ -61,6 +66,16 @@ const BlurWrapper = styled.div`
 
 const Lyrics = () => {
   const { visible } = useLyricsContext()
+  const setTheme = useSetTheme()
+  useEffect(() => {
+    if (visible) {
+      setTimeout(() => {
+        setTheme(darkTheme)
+      }, 500)
+    } else {
+      setTheme(lightTheme)
+    }
+  }, [visible, setTheme])
   const nowPlayingItem = useNowPlayingItem()
   const playerRef = usePlayerRef()
   const { currentTime } = usePlaybackState()
@@ -79,7 +94,7 @@ const Lyrics = () => {
   }, [currentTimeInMs])
   const ref = useRef<HTMLDivElement>(null)
   const [lastScrollAt, setLastScrollAt] = useState(0)
-  const blurBehindDelayAfterScroll = 500
+  const blurBehindDelayAfterScroll = 1000
   const [blurBehind, setBlurBehind] = useState(true)
   useEffect(() => {
     if (activeIndex === undefined) return
@@ -87,8 +102,8 @@ const Lyrics = () => {
     if (!wrapper) return
     const line = wrapper.getElementsByTagName('p')[activeIndex]
     if (line) {
-      line.scrollIntoView({ block: 'center', behavior: 'smooth' })
       if (Date.now() - lastScrollAt >= blurBehindDelayAfterScroll) {
+        line.scrollIntoView({ block: 'center', behavior: 'smooth' })
         setBlurBehind(true)
       }
     }

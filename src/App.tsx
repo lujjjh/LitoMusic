@@ -3,15 +3,17 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import { useState } from 'react'
 import { initReactI18next } from 'react-i18next'
 import { HashRouter as Router, Route } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
 import Authorize from './Authorize'
 import ControlButtons from './ControlButtons'
+import SetThemeContext from './GlobalThemeContext'
 import resources from './i18n/resources.json'
 import ListenNow from './ListenNow'
 import Lyrics, { LyricsContext } from './Lyrics'
 import Player from './Player'
 import Sidebar from './Sidebar'
+import { lightTheme } from './themes'
 import useAuthorized from './useAuthorized'
 
 i18n
@@ -26,6 +28,7 @@ i18n
   })
 
 const Wrapper = styled.div`
+  color: ${({ theme }) => theme.textColor};
   height: 100vh;
   display: flex;
   overflow: hidden;
@@ -53,37 +56,42 @@ const fetcher = async (url: string) => {
 }
 
 const App = () => {
+  const [theme, setTheme] = useState(lightTheme)
   const authorized = useAuthorized()
   const [lyricsVisible, setLyricsVisible] = useState(false)
   return (
-    <SWRConfig
-      value={{
-        loadingTimeout: 10000,
-        fetcher,
-      }}
-    >
-      <LyricsContext.Provider value={{ visible: lyricsVisible, setVisible: setLyricsVisible }}>
-        <Wrapper>
-          <Router>
-            <Sidebar />
-            <MainScroll>
-              <Main>
-                {authorized ? (
-                  <>
-                    <Player />
-                    <Route path="/" component={ListenNow} />
-                  </>
-                ) : (
-                  <Authorize />
-                )}
-              </Main>
-            </MainScroll>
-          </Router>
-        </Wrapper>
-        <ControlButtons />
-        <Lyrics />
-      </LyricsContext.Provider>
-    </SWRConfig>
+    <SetThemeContext.Provider value={setTheme}>
+      <ThemeProvider theme={theme}>
+        <SWRConfig
+          value={{
+            loadingTimeout: 10000,
+            fetcher,
+          }}
+        >
+          <LyricsContext.Provider value={{ visible: lyricsVisible, setVisible: setLyricsVisible }}>
+            <Wrapper>
+              <Router>
+                <Sidebar />
+                <MainScroll>
+                  <Main>
+                    {authorized ? (
+                      <>
+                        <Player />
+                        <Route path="/" component={ListenNow} />
+                      </>
+                    ) : (
+                      <Authorize />
+                    )}
+                  </Main>
+                </MainScroll>
+              </Router>
+              <ControlButtons />
+              <Lyrics />
+            </Wrapper>
+          </LyricsContext.Provider>
+        </SWRConfig>
+      </ThemeProvider>
+    </SetThemeContext.Provider>
   )
 }
 

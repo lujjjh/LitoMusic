@@ -13,8 +13,10 @@ const GlobalStyle = createGlobalStyle`${css`
     -webkit-font-smoothing: antialiased;
   }
 
-  * {
-    -webkit-user-drag: none;
+  input,
+  textarea,
+  button {
+    --app-region: none;
   }
 
   :not(input):not(textarea) {

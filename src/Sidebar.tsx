@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import logo from '../logo.svg'
 import NavButton from './NavButton'
+import { isMacOS } from './utils'
 
 const Wrapper = styled.div`
   display: flex;
@@ -9,7 +10,7 @@ const Wrapper = styled.div`
   width: 220px;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  background-color: rgba(249, 249, 249, 0.96);
+  background-color: ${isMacOS() ? 'transparent' : `rgba(249, 249, 249, 0.96)`};
 
   ul {
     flex: 1;
@@ -46,9 +47,10 @@ const Logo = styled.div`
   background: url(${logo}) center center no-repeat;
   background-size: 30px 30px;
   height: 60px;
-  -webkit-app-region: drag;
+  --app-region: drag;
   margin-bottom: 10px;
   color: #000;
+  opacity: ${isMacOS() ? 0 : 1};
 `
 
 const Sidebar = () => {

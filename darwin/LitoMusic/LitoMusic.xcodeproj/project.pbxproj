@@ -13,11 +13,15 @@
 		B71F1E8E26FE0FED00A9DAA2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B71F1E8D26FE0FED00A9DAA2 /* Preview Assets.xcassets */; };
 		B71F1E9626FE101700A9DAA2 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71F1E9526FE101700A9DAA2 /* WebView.swift */; };
 		B71F1E9C26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m in Sources */ = {isa = PBXBuildFile; fileRef = B71F1E9B26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m */; };
-		B71F1E9E26FE1E3500A9DAA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71F1E9D26FE1E3500A9DAA2 /* AppDelegate.swift */; };
+		B71F1EA026FE2DE600A9DAA2 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71F1E9F26FE2DE600A9DAA2 /* VisualEffectView.swift */; };
+		B71F1EA426FEFE7C00A9DAA2 /* LitoSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71F1EA326FEFE7C00A9DAA2 /* LitoSchemeHandler.swift */; };
+		B71F1EA726FF1BEE00A9DAA2 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = B71F1EA626FF1BEE00A9DAA2 /* Gzip */; };
+		B71F1EA926FF1F9F00A9DAA2 /* dist in Resources */ = {isa = PBXBuildFile; fileRef = B71F1EA826FF1F9F00A9DAA2 /* dist */; };
+		B7A197AE26FF34930066BCDC /* WKWebView+Hook.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A197AD26FF34930066BCDC /* WKWebView+Hook.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B71F1E8326FE0FEB00A9DAA2 /* LitoMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LitoMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B71F1E8326FE0FEB00A9DAA2 /* Lito Music.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lito Music.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B71F1E8626FE0FEB00A9DAA2 /* LitoMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LitoMusicApp.swift; sourceTree = "<group>"; };
 		B71F1E8826FE0FEB00A9DAA2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B71F1E8A26FE0FED00A9DAA2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -27,7 +31,10 @@
 		B71F1E9826FE12B600A9DAA2 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		B71F1E9A26FE141C00A9DAA2 /* LitoMusic-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LitoMusic-Bridging-Header.h"; sourceTree = "<group>"; };
 		B71F1E9B26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WDBSetWebSecurityEnabled.m; sourceTree = "<group>"; };
-		B71F1E9D26FE1E3500A9DAA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B71F1E9F26FE2DE600A9DAA2 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
+		B71F1EA326FEFE7C00A9DAA2 /* LitoSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LitoSchemeHandler.swift; sourceTree = "<group>"; };
+		B71F1EA826FF1F9F00A9DAA2 /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../../dist; sourceTree = "<group>"; };
+		B7A197AD26FF34930066BCDC /* WKWebView+Hook.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+Hook.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B71F1EA726FF1BEE00A9DAA2 /* Gzip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +52,7 @@
 		B71F1E7A26FE0FEB00A9DAA2 = {
 			isa = PBXGroup;
 			children = (
+				B71F1EA826FF1F9F00A9DAA2 /* dist */,
 				B71F1E8526FE0FEB00A9DAA2 /* LitoMusic */,
 				B71F1E8426FE0FEB00A9DAA2 /* Products */,
 				B71F1E9726FE12B500A9DAA2 /* Frameworks */,
@@ -53,7 +62,7 @@
 		B71F1E8426FE0FEB00A9DAA2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B71F1E8326FE0FEB00A9DAA2 /* LitoMusic.app */,
+				B71F1E8326FE0FEB00A9DAA2 /* Lito Music.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -69,7 +78,9 @@
 				B71F1E9526FE101700A9DAA2 /* WebView.swift */,
 				B71F1E9B26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m */,
 				B71F1E9A26FE141C00A9DAA2 /* LitoMusic-Bridging-Header.h */,
-				B71F1E9D26FE1E3500A9DAA2 /* AppDelegate.swift */,
+				B71F1E9F26FE2DE600A9DAA2 /* VisualEffectView.swift */,
+				B71F1EA326FEFE7C00A9DAA2 /* LitoSchemeHandler.swift */,
+				B7A197AD26FF34930066BCDC /* WKWebView+Hook.m */,
 			);
 			path = LitoMusic;
 			sourceTree = "<group>";
@@ -106,8 +117,11 @@
 			dependencies = (
 			);
 			name = LitoMusic;
+			packageProductDependencies = (
+				B71F1EA626FF1BEE00A9DAA2 /* Gzip */,
+			);
 			productName = LitoMusic;
-			productReference = B71F1E8326FE0FEB00A9DAA2 /* LitoMusic.app */;
+			productReference = B71F1E8326FE0FEB00A9DAA2 /* Lito Music.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -135,6 +149,9 @@
 				Base,
 			);
 			mainGroup = B71F1E7A26FE0FEB00A9DAA2;
+			packageReferences = (
+				B71F1EA526FF1BEE00A9DAA2 /* XCRemoteSwiftPackageReference "GzipSwift" */,
+			);
 			productRefGroup = B71F1E8426FE0FEB00A9DAA2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -149,6 +166,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B71F1EA926FF1F9F00A9DAA2 /* dist in Resources */,
 				B71F1E8E26FE0FED00A9DAA2 /* Preview Assets.xcassets in Resources */,
 				B71F1E8B26FE0FED00A9DAA2 /* Assets.xcassets in Resources */,
 			);
@@ -163,9 +181,11 @@
 			files = (
 				B71F1E9626FE101700A9DAA2 /* WebView.swift in Sources */,
 				B71F1E8926FE0FEB00A9DAA2 /* ContentView.swift in Sources */,
+				B7A197AE26FF34930066BCDC /* WKWebView+Hook.m in Sources */,
 				B71F1E8726FE0FEB00A9DAA2 /* LitoMusicApp.swift in Sources */,
-				B71F1E9E26FE1E3500A9DAA2 /* AppDelegate.swift in Sources */,
 				B71F1E9C26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m in Sources */,
+				B71F1EA426FEFE7C00A9DAA2 /* LitoSchemeHandler.swift in Sources */,
+				B71F1EA026FE2DE600A9DAA2 /* VisualEffectView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,15 +322,16 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lujjjh.LitoMusic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Lito Music";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LitoMusic/LitoMusic-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -333,15 +354,16 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lujjjh.LitoMusic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Lito Music";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LitoMusic/LitoMusic-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -370,6 +392,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B71F1EA526FF1BEE00A9DAA2 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/1024jp/GzipSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B71F1EA626FF1BEE00A9DAA2 /* Gzip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B71F1EA526FF1BEE00A9DAA2 /* XCRemoteSwiftPackageReference "GzipSwift" */;
+			productName = Gzip;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B71F1E7B26FE0FEB00A9DAA2 /* Project object */;
 }

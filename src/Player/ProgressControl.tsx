@@ -82,7 +82,7 @@ const Slider = styled.div`
     width: 100%;
     height: 11px;
     margin: 0;
-    -webkit-app-region: none;
+    --app-region: none;
     &,
     &::-webkit-slider-runnable-track,
     &::-webkit-slider-thumb {
