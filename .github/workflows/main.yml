@@ -12,6 +12,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - uses: GuillaumeFalourd/setup-windows10-sdk-action@v1
       - name: Install dependencies
         run: npm i
       - name: Release build
