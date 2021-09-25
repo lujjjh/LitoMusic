@@ -12,5 +12,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: Install dependencies
+        run: npm ci
       - name: Release build
         run: npm run build:windows
