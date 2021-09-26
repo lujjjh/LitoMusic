@@ -5,7 +5,7 @@
     "install": "cd packages/lito && npm install",
     "dev:web": "cd packages/lito && npm start",
     "dev:windows": "cd windows && cargo run",
-    "build:web": "rm -rf dist && cd packages/lito && npm run build && mv dist ../..",
+    "build:web": "cd packages/lito && npm run build",
     "build:windows": "npm run build:web && cd windows && cargo build --target x86_64-pc-windows-msvc --release",
     "build:darwin": "npm run build:web && make -C darwin"
   }

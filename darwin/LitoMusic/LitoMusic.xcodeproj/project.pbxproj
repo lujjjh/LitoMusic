@@ -34,7 +34,7 @@
 		B71F1E9B26FE141C00A9DAA2 /* WDBSetWebSecurityEnabled.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WDBSetWebSecurityEnabled.m; sourceTree = "<group>"; };
 		B71F1E9F26FE2DE600A9DAA2 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		B71F1EA326FEFE7C00A9DAA2 /* LitoSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LitoSchemeHandler.swift; sourceTree = "<group>"; };
-		B71F1EA826FF1F9F00A9DAA2 /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../../dist; sourceTree = "<group>"; };
+		B71F1EA826FF1F9F00A9DAA2 /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../../packages/lito/dist; sourceTree = "<group>"; };
 		B7A197AD26FF34930066BCDC /* WKWebView+Hook.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+Hook.m"; sourceTree = "<group>"; };
 		B7A197BD2700157A0066BCDC /* ParsedArgs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedArgs.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */

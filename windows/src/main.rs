@@ -38,7 +38,7 @@ const APP_URL: &str = if DEBUG {
 };
 
 #[cfg(not(debug_assertions))]
-static APP_DIR: Dir = include_dir!("..\\dist");
+static APP_DIR: Dir = include_dir!("..\\packages\\lito\\dist");
 
 fn main() -> Result<()> {
     check_webview_installation()?;
