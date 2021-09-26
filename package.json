@@ -2,6 +2,7 @@
   "name": "lito",
   "private": true,
   "scripts": {
+    "install": "cd packages/lito && npm install",
     "dev:web": "cd packages/lito && npm start",
     "dev:windows": "cd windows && cargo run",
     "build:web": "rm -rf dist && cd packages/lito && npm run build && mv dist ../..",
