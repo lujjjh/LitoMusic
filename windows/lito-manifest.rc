@@ -1,5 +1,35 @@
-#include "winuser.h"
+#define VER 0,1,0,0
+#define VER_STR "0.1.0.0-beta.5\0"
 
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "lito.exe.manifest"
+#define RT_MANIFEST 24
+1 RT_MANIFEST "lito.exe.manifest"
 
 IDI_APPLICATION ICON "icon.ico"
+
+2 VERSIONINFO
+
+FILEVERSION VER
+PRODUCTVERSION VER
+
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+			VALUE "FileDescription", "A lightweight Apple Music client."
+			VALUE "FileVersion", VER_STR
+			VALUE "InternalName", "Lito Music"
+			VALUE "LegalCopyright", "See LICENSE.txt in the repository."
+			VALUE "ProductName", "Lito Music"
+			VALUE "OriginalFilename", "lito.exe"
+			VALUE "ProductVersion", VER_STR
+			VALUE "ProductShortName", "Lito Music"
+			VALUE "Official Build", "0"
+		END
+	END
+
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x0409, 1200, 0x0804, 1200
+	END
+END

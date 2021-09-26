@@ -1,0 +1,40 @@
+name: CI
+on: [pull_request, push]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run: rustup update --no-self-update stable && rustup default stable
+      - run: rustup target add x86_64-pc-windows-msvc
+      - name: Install dependencies
+        run: npm i
+      - name: Release build
+        run: npm run build:windows
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: lito.exe
+          path: windows/target/x86_64-pc-windows-msvc/release/lito.exe
+          retention-days: 5
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm i
+      - name: Release build
+        run: npm run build:darwin
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: LitoMusic.dmg
+          path: darwin/build/LitoMusic.dmg
+          retention-days: 5

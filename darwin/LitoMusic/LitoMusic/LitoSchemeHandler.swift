@@ -32,11 +32,11 @@ class LitoSchemeHandler : NSObject, WKURLSchemeHandler {
                 }
             }()
             let fileUrl = Bundle.main.path(forResource: url.path + ".gz", ofType: nil, inDirectory: "dist")
-            guard let fileUrl = fileUrl else {
+            guard let fileUrlGuarded = fileUrl else {
                 urlSchemeTask.didFailWithError(LitoSchemeHandlerError.notFound)
                 return
             }
-            let data = try (try NSData(contentsOfFile: fileUrl) as Data).gunzipped()
+            let data = try (try NSData(contentsOfFile: fileUrlGuarded) as Data).gunzipped()
             let response = HTTPURLResponse(url: url,
                                            mimeType: mimeType,
                                            expectedContentLength: data.count,
