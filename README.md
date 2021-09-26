@@ -16,7 +16,7 @@
 <p align="center">
   <strong>Lito (/laɪto/) Music</strong> is a lightweight Apple Music client for Windows and macOS,<br />
   built with MusicKit JS, Edge WebView2 / WKWebView and React.
-  </strong>
+</p>
 
 ## System requirements
 
