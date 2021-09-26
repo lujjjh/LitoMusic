@@ -93,11 +93,13 @@ struct WebView : NSViewRepresentable {
             """)
 
 #if !DEBUG
-            webView.evaluateJavaScript("""
-                document.addEventListener("contextmenu", event => {
-                    event.preventDefault()
-                })
-            """)
+            if !ParsedArgs.shared.devTools {
+                webView.evaluateJavaScript("""
+                    document.addEventListener("contextmenu", event => {
+                        event.preventDefault()
+                    })
+                """)
+            }
 #endif
         }
 
