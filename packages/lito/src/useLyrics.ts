@@ -40,7 +40,7 @@ const useLyrics = () => {
       if (id === undefined) {
         return null
       }
-      return `v1/catalog/cn/songs/${id}/lyrics`
+      return `v1/catalog/${MusicKit.getInstance().api.storefrontId}/songs/${id}/lyrics`
     },
     {
       shouldRetryOnError: false,
