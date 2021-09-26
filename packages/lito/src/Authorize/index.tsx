@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -14,13 +15,14 @@ const Wrapper = styled.div`
 `
 
 const Authorize = () => {
+  const { t } = useTranslation()
   const authorize = useCallback(() => {
     MusicKit.getInstance().authorize()
   }, [])
   return (
     <Wrapper>
       <button type="button" onClick={authorize}>
-        Connect to Apple Music
+        {t('connectToAppleMusic')}
       </button>
     </Wrapper>
   )

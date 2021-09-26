@@ -1,6 +1,7 @@
 {
   "en": {
     "translation": {
+      "connectToAppleMusic": "Connect to Apple Music",
       "listenNow": "Listen now",
       "nothing": "Nothing",
       "fetchFailed": "Failed to load the data"
@@ -8,6 +9,7 @@
   },
   "zh-CN": {
     "translation": {
+      "connectToAppleMusic": "连接到 Apple Music",
       "listenNow": "现在就听",
       "nothing": "没有数据",
       "fetchFailed": "加载失败"

@@ -4,6 +4,12 @@ import compression from 'vite-plugin-compression'
 import reactJsx from 'vite-react-jsx'
 
 export default defineConfig(({ command }) => ({
+  server: {
+    strictPort: true,
+    watch: {
+      usePolling: true,
+    },
+  },
   plugins: [
     reactRefresh(),
     reactJsx(),
