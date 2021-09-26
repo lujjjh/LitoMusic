@@ -11,7 +11,7 @@ package: build
 	mkdir -p '$(TARGET_DIR)'
 	cp -a '$(CURDIR)/build/Build/Products/Release/Lito Music.app' '$(TARGET_DIR)'
 	ln -s /Applications '$(TARGET_DIR)/'
-	rm '${TARGET_DMG}'
+	rm -f '${TARGET_DMG}'
 	hdiutil create -fs HFS+ -srcfolder '$(TARGET_DIR)/' -volname 'Lito Music' '$(TARGET_DMG)'
 
 .PHONY: all build package
