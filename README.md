@@ -13,12 +13,15 @@
   <a href="README-cn.md">中文</a>
 </p>
 
-**Lito (/laɪto/) Music** is a lightweight Apple Music client for Windows, built with MusicKit JS, Edge WebView2 and React.
+<p align="center">
+  <strong>Lito (/laɪto/) Music</strong> is a lightweight Apple Music client for Windows and macOS,<br />
+  built with MusicKit JS, Edge WebView2 / WKWebView and React.
+  </strong>
 
 ## System requirements
 
-- OS version ≥ Windows 10.
-- Edge WebView2 runtime (pre-installed in Windows 10 Insider Preview and Windows 11).  
+- OS version ≥ Windows 10 / macOS 11.0.
+- For Windows: Edge WebView2 runtime (pre-installed in Windows 10 Insider Preview and Windows 11).  
   If not installed, Lito Music will try to download and install it at the first launch.
 
 ## Downloads
@@ -33,20 +36,31 @@ Pre-compiled binaries are available [here][releases].
 
 ### Listen now
 
-<img src="https://user-images.githubusercontent.com/3000535/134614721-7121c8d3-87d1-41cc-af19-9c506c2380b3.png" width="600" alt="Lito Music (listen now)" />
+<img src="https://user-images.githubusercontent.com/3000535/134794764-e974e026-c719-49b5-871f-72466078d4af.png" width="1000" alt="Lito Music (listen now)" />
 
 
 ### Time-synced lyrics
 
-<img src="https://user-images.githubusercontent.com/3000535/134615011-206617c5-d958-47d5-aef3-d9d541f366f7.png" width="600" alt="Lito Music (lyrics)" />
+<img src="https://user-images.githubusercontent.com/3000535/134794792-0f0a4a56-c95b-4b02-966c-cbb71c90df20.png" width="1000" alt="Lito Music (time-synced lyrics)" />
 
 ## Build
 
-Rust and Node.js are required.
+### For Windows
+
+Visual Studio (with Windows 10 SDK), Rust and Node.js are required.
 
 ```powershell
 npm install
-npm run build
+npm run build:windows
+```
+
+### For macOS
+
+Xcode and Node.js are required.
+
+```sh
+npm install
+npm run build:darwin
 ```
 
 [releases]: https://github.com/lujjjh/lito/releases
