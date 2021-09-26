@@ -18,8 +18,8 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
-          name: lito.exe
-          path: windows/target/x86_64-pc-windows-msvc/release/lito.exe
+          name: LitoMusic.exe
+          path: windows/target/x86_64-pc-windows-msvc/release/LitoMusic.exe
           retention-days: 5
   build-macos:
     runs-on: macos-latest

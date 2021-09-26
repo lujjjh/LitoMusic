@@ -17,5 +17,5 @@ flate2 = "1.0"
 embed-resource = "1.6"
 
 [[bin]]
-name = "lito"
+name = "LitoMusic"
 path = "src/main.rs"
