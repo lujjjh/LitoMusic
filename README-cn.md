@@ -13,12 +13,15 @@
   中文
 </p>
 
-**Lito (/laɪto/) Music** 是一个轻量级的 Windows Apple Music 客户端，使用 MusicKit JS、Edge WebView2 和 React 构建。
+<p align="center">
+  <strong>Lito (/laɪto/) Music</strong> 是一个轻量级的 Windows / macOS Apple Music 客户端，<br />
+  使用 MusicKit JS、Edge WebView2 / WKWebView 和 React 构建。
+</p>
 
 ## 系统需求
 
-- 操作系统版本 ≥ Windows 10。
-- Edge WebView2 运行时 (预装于 Windows 10 Insider Preview 和 Windows 11)。  
+- 操作系统版本 ≥ Windows 10 或 macOS 11.0。
+- 对 Windows：Edge WebView2 运行时 (预装于 Windows 10 Insider Preview 和 Windows 11)。  
   若未安装，Lito Music 会在首次启动时尝试下载和安装。
 
 ## 下载
@@ -31,19 +34,30 @@
 
 ### 现在就听
 
-<img src="https://user-images.githubusercontent.com/3000535/134614721-7121c8d3-87d1-41cc-af19-9c506c2380b3.png" width="600" alt="Lito Music (现在就听)" />
+<img src="https://user-images.githubusercontent.com/3000535/134794764-e974e026-c719-49b5-871f-72466078d4af.png" width="1000" alt="Lito Music (现在就听)" />
 
 ### 时间同步歌词
 
-<img src="https://user-images.githubusercontent.com/3000535/134615011-206617c5-d958-47d5-aef3-d9d541f366f7.png" width="600" alt="Lito Music (歌词)" />
+<img src="https://user-images.githubusercontent.com/3000535/134794792-0f0a4a56-c95b-4b02-966c-cbb71c90df20.png" width="1000" alt="Lito Music (时间同步歌词)" />
 
 ## 构建
 
-需安装 Rust 和 Node.js。
+### 对 Windows
+
+需安装 Visual Studio（包括 Windows 10 SDK）、Rust 和 Node.js。
 
 ```powershell
 npm install
-npm run build
+npm run build:windows
+```
+
+### 对 macOS
+
+需安装 Xcode 和 Node.js。
+
+```sh
+npm install
+npm run build:darwin
 ```
 
 [releases]: https://github.com/lujjjh/lito/releases
