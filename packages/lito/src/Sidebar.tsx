@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import logo from '../logo.svg'
+import logo from './logo.svg'
 import NavButton from './NavButton'
 import { isMacOS } from './utils'
 
