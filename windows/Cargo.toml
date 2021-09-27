@@ -1,3 +1,5 @@
+cargo-features = ["different-binary-name"]
+
 [package]
 name = "lito-windows"
 version = "0.1.0"
@@ -17,5 +19,6 @@ flate2 = "1.0"
 embed-resource = "1.6"
 
 [[bin]]
-name = "LitoMusic"
+name = "lito-music"
+filename = "LitoMusic"
 path = "src/main.rs"
