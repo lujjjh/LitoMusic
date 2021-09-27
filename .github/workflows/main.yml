@@ -9,7 +9,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - run: rustup update --no-self-update stable && rustup default stable
+      - run: rustup update --no-self-update nightly && rustup default nightly
       - run: rustup target add x86_64-pc-windows-msvc
       - name: Install dependencies
         run: npm i
