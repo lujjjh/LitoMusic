@@ -1,4 +1,5 @@
 #define RT_MANIFEST 24
 1 RT_MANIFEST "lito.exe.manifest"
 
+#define IDI_APPLICATION 32512
 IDI_APPLICATION ICON "icon.ico"
