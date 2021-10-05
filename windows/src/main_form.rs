@@ -351,18 +351,7 @@ unsafe fn wndproc_pre(h_wnd: HWND, msg: u32, w_param: WPARAM, l_param: LPARAM) -
             );
             Some(LRESULT(0))
         }
-        WindowsAndMessaging::WM_NCCALCSIZE if w_param.0 != 0 => {
-            let nccalcsize_params =
-                &mut *(l_param.0 as *mut WindowsAndMessaging::NCCALCSIZE_PARAMS);
-            let cx_frame = WindowsAndMessaging::GetSystemMetrics(WindowsAndMessaging::SM_CXFRAME);
-            let cy_frame = WindowsAndMessaging::GetSystemMetrics(WindowsAndMessaging::SM_CYFRAME);
-            let cx_padded_border =
-                WindowsAndMessaging::GetSystemMetrics(WindowsAndMessaging::SM_CXPADDEDBORDER);
-            nccalcsize_params.rgrc[0].right -= cx_frame + cx_padded_border;
-            nccalcsize_params.rgrc[0].left += cx_frame + cx_padded_border;
-            nccalcsize_params.rgrc[0].bottom -= cy_frame + cx_padded_border;
-            Some(LRESULT(0))
-        }
+        WindowsAndMessaging::WM_NCCALCSIZE if w_param.0 != 0 => Some(LRESULT(0)),
         WindowsAndMessaging::WM_DESTROY => {
             WindowsAndMessaging::PostQuitMessage(0);
             Some(LRESULT(0))

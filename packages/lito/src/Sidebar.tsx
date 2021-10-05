@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   background-color: ${isMacOS() ? 'transparent' : `rgba(249, 249, 249, 0.96)`};
+  --app-region: drag;
 
   ul {
     flex: 1;
@@ -43,11 +44,10 @@ const Wrapper = styled.div`
   }
 `
 
-const Logo = styled.div`
+const Logo = styled.img`
   background: url(${logo}) center center no-repeat;
-  background-size: 30px 30px;
-  height: 60px;
-  --app-region: drag;
+  background-size: 26px;
+  height: 55px;
   margin-bottom: 10px;
   color: #000;
   opacity: ${isMacOS() ? 0 : 1};
@@ -60,7 +60,13 @@ const Sidebar = () => {
       <Logo />
       <ul>
         <li>
-          <NavButton to="/">{t('listenNow')}</NavButton>
+          <NavButton to="/listen-now">{t('listenNow')}</NavButton>
+        </li>
+        <li>
+          <NavButton to="/browse">{t('browse')}</NavButton>
+        </li>
+        <li>
+          <NavButton to="/radio">{t('radio')}</NavButton>
         </li>
       </ul>
     </Wrapper>

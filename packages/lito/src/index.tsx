@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/react'
+import { Integrations } from '@sentry/tracing'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createGlobalStyle, css } from 'styled-components'
@@ -49,6 +51,12 @@ const GlobalStyle = createGlobalStyle`${css`
 `}
 `
 
+Sentry.init({
+  dsn: 'https://0bcefbb4d3954ecc9505b4e6b31aa09e@o1022804.ingest.sentry.io/5992711',
+  integrations: [new Integrations.BrowserTracing()],
+
+  tracesSampleRate: 1.0,
+})
 ;(async () => {
   await MusicKit.configure({
     developerToken:

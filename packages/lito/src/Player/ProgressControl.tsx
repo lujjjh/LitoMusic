@@ -46,9 +46,7 @@ const CurrentTime = styled.div`
   background-color: #fff;
   opacity: 0.8;
   font-size: 12px;
-  font-variant-numeric: tabular-nums;
   line-height: 12px;
-  transform: scale(0.85);
   transition: opacity 0.1s 0.3s ease;
   pointer-events: none;
 `
@@ -102,10 +100,9 @@ const Slider = styled.div`
       background-color: #333;
       border-radius: 1px;
       opacity: 0;
-      transition: transform 0.1s ease, opacity 0.1s ease;
+      transition: opacity 0.1s ease;
     }
     &:hover::-webkit-slider-thumb {
-      transform: scaleY(300%);
       opacity: 1;
     }
   }
@@ -144,9 +141,16 @@ const ProgressControl = () => {
   const [shouldContinueToPlay, setShouldContinueToPlay] = useState(false)
   const handleSeekStart = useCallback(
     (event: React.MouseEvent<HTMLInputElement>) => {
-      if (event.button === 0 && playerRef && !playerRef.paused) {
+      if (
+        event.button === 0 &&
+        playerRef &&
+        playerRef.currentTime > 0 &&
+        !playerRef.paused &&
+        !playerRef.ended &&
+        playerRef.readyState > playerRef.HAVE_CURRENT_DATA
+      ) {
         // pause during seeking and continue to play once seek ends
-        playerRef?.pause()
+        playerRef.pause()
         setShouldContinueToPlay(true)
       }
     },
@@ -154,8 +158,8 @@ const ProgressControl = () => {
   )
   const handleSeekEnd = useCallback(
     (event: React.MouseEvent<HTMLInputElement>) => {
-      if (event.button === 0 && shouldContinueToPlay) {
-        playerRef?.play()
+      if (event.button === 0 && shouldContinueToPlay && playerRef && playerRef.paused) {
+        playerRef.play()
         setShouldContinueToPlay(false)
       }
     },

@@ -1,17 +1,21 @@
 import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { initReactI18next } from 'react-i18next'
-import { HashRouter as Router, Route } from 'react-router-dom'
+import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
+import { fetcher } from './api'
 import Authorize from './Authorize'
+import Browse from './Browse'
+import { ScrollToTop } from './components'
 import ControlButtons from './ControlButtons'
 import SetThemeContext from './GlobalThemeContext'
 import resources from './i18n/resources.json'
 import ListenNow from './ListenNow'
 import Lyrics, { LyricsContext } from './Lyrics'
 import Player from './Player'
+import Radio from './Radio'
 import Sidebar from './Sidebar'
 import { lightTheme } from './themes'
 import useAuthorized from './useAuthorized'
@@ -43,22 +47,16 @@ const MainScroll = styled.div`
 
 const Main = styled.div`
   box-sizing: border-box;
-  padding-top: 60px;
+  padding-top: 55px;
   height: 100%;
   overflow: overlay;
 `
-
-const fetcher = async (url: string) => {
-  const {
-    data: { data },
-  } = await MusicKit.getInstance().api.music(url)
-  return data
-}
 
 const App = () => {
   const [theme, setTheme] = useState(lightTheme)
   const authorized = useAuthorized()
   const [lyricsVisible, setLyricsVisible] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
   return (
     <SetThemeContext.Provider value={setTheme}>
       <ThemeProvider theme={theme}>
@@ -71,13 +69,21 @@ const App = () => {
           <LyricsContext.Provider value={{ visible: lyricsVisible, setVisible: setLyricsVisible }}>
             <Wrapper>
               <Router>
+                <ScrollToTop scrollRef={scrollRef} />
                 <Sidebar />
                 <MainScroll>
-                  <Main>
+                  <Main ref={scrollRef}>
                     {authorized ? (
                       <>
                         <Player />
-                        <Route path="/" component={ListenNow} />
+                        <Switch>
+                          <Route path="/" exact>
+                            <Redirect to="/listen-now" />
+                          </Route>
+                          <Route path="/listen-now" component={ListenNow} />
+                          <Route path="/browse" component={Browse} />
+                          <Route path="/radio" component={Radio} />
+                        </Switch>
                       </>
                     ) : (
                       <Authorize />

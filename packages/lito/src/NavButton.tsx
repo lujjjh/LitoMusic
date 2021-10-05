@@ -13,7 +13,10 @@ const Button = styled.button`
   line-height: 28px;
   border-radius: 5px;
   text-align: left;
-  background-color: transparent;
+  &,
+  &:active {
+    background-color: transparent;
+  }
   &.active {
     background-color: rgba(60, 60, 67, 0.1);
   }
