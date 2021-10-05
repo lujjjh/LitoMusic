@@ -46,9 +46,7 @@ const CurrentTime = styled.div`
   background-color: #fff;
   opacity: 0.8;
   font-size: 12px;
-  font-variant-numeric: tabular-nums;
   line-height: 12px;
-  transform: scale(0.85);
   transition: opacity 0.1s 0.3s ease;
   pointer-events: none;
 `
@@ -102,10 +100,9 @@ const Slider = styled.div`
       background-color: #333;
       border-radius: 1px;
       opacity: 0;
-      transition: transform 0.1s ease, opacity 0.1s ease;
+      transition: opacity 0.1s ease;
     }
     &:hover::-webkit-slider-thumb {
-      transform: scaleY(300%);
       opacity: 1;
     }
   }

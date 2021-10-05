@@ -47,7 +47,7 @@ const MainScroll = styled.div`
 
 const Main = styled.div`
   box-sizing: border-box;
-  padding-top: 60px;
+  padding-top: 55px;
   height: 100%;
   overflow: overlay;
 `

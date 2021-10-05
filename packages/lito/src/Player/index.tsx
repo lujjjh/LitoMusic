@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   left: 0;
   right: 0;
   z-index: 1;
-  height: 60px;
+  height: 55px;
   padding: 5px;
   box-sizing: border-box;
   display: flex;
@@ -16,8 +16,7 @@ const Wrapper = styled.div`
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.88);
   backdrop-filter: saturate(50%) blur(20px);
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 0px 0px, rgba(0, 0, 0, 0.07) 0px 1px 3px 0px,
-    rgba(255, 255, 255, 0.45) 0px 1px 1px 0px inset;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   --app-region: drag;
 `
 
@@ -104,7 +103,7 @@ const Player = () => {
       </Controls>
       <MediaItem>
         <Artwork>
-          <apple-music-artwork width="50" />
+          <apple-music-artwork width="44" />
         </Artwork>
         <Meta>
           {mediaItem && (
