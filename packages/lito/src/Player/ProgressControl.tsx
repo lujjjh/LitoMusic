@@ -144,9 +144,16 @@ const ProgressControl = () => {
   const [shouldContinueToPlay, setShouldContinueToPlay] = useState(false)
   const handleSeekStart = useCallback(
     (event: React.MouseEvent<HTMLInputElement>) => {
-      if (event.button === 0 && playerRef && !playerRef.paused) {
+      if (
+        event.button === 0 &&
+        playerRef &&
+        playerRef.currentTime > 0 &&
+        !playerRef.paused &&
+        !playerRef.ended &&
+        playerRef.readyState > playerRef.HAVE_CURRENT_DATA
+      ) {
         // pause during seeking and continue to play once seek ends
-        playerRef?.pause()
+        playerRef.pause()
         setShouldContinueToPlay(true)
       }
     },
@@ -154,8 +161,8 @@ const ProgressControl = () => {
   )
   const handleSeekEnd = useCallback(
     (event: React.MouseEvent<HTMLInputElement>) => {
-      if (event.button === 0 && shouldContinueToPlay) {
-        playerRef?.play()
+      if (event.button === 0 && shouldContinueToPlay && playerRef && playerRef.paused) {
+        playerRef.play()
         setShouldContinueToPlay(false)
       }
     },
