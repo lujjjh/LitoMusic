@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+import logo from './logo.svg'
 import NavButton from './NavButton'
 import { isMacOS } from './utils'
 
 const Wrapper = styled.div`
-  padding-top: ${isMacOS() ? '55px' : '15px'};
   display: flex;
   flex-direction: column;
   width: 220px;
@@ -44,10 +44,20 @@ const Wrapper = styled.div`
   }
 `
 
+const Logo = styled.img`
+  background: url(${logo}) center center no-repeat;
+  background-size: 26px;
+  height: 55px;
+  margin-bottom: 10px;
+  color: #000;
+  opacity: ${isMacOS() ? 0 : 1};
+`
+
 const Sidebar = () => {
   const { t } = useTranslation()
   return (
     <Wrapper>
+      <Logo />
       <ul>
         <li>
           <NavButton to="/listen-now">{t('listenNow')}</NavButton>
