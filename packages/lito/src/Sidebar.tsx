@@ -44,7 +44,7 @@ const Wrapper = styled.div`
   }
 `
 
-const Logo = styled.img`
+const Logo = styled.div`
   background: url(${logo}) center center no-repeat;
   background-size: 26px;
   height: 55px;
