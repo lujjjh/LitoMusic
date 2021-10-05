@@ -1,6 +1,6 @@
 import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { initReactI18next } from 'react-i18next'
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
@@ -8,6 +8,7 @@ import { SWRConfig } from 'swr'
 import { fetcher } from './api'
 import Authorize from './Authorize'
 import Browse from './Browse'
+import { ScrollToTop } from './components'
 import ControlButtons from './ControlButtons'
 import SetThemeContext from './GlobalThemeContext'
 import resources from './i18n/resources.json'
@@ -55,6 +56,7 @@ const App = () => {
   const [theme, setTheme] = useState(lightTheme)
   const authorized = useAuthorized()
   const [lyricsVisible, setLyricsVisible] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
   return (
     <SetThemeContext.Provider value={setTheme}>
       <ThemeProvider theme={theme}>
@@ -67,9 +69,10 @@ const App = () => {
           <LyricsContext.Provider value={{ visible: lyricsVisible, setVisible: setLyricsVisible }}>
             <Wrapper>
               <Router>
+                <ScrollToTop scrollRef={scrollRef} />
                 <Sidebar />
                 <MainScroll>
-                  <Main>
+                  <Main ref={scrollRef}>
                     {authorized ? (
                       <>
                         <Player />
