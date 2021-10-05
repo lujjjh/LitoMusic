@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import useSWRImmutable from 'swr/immutable'
-import useNowPlayingItem from './useNowPlayingItem'
+import useNowPlayingItem from '../useNowPlayingItem'
 
 export interface Lyrics {
   lines: LyricsLine[]
@@ -32,7 +32,7 @@ const parseTime = (timeString: string) => {
   return +(match[1] || 0) * 60 * 60 * 1000 + +(match[2] || 0) * 60 * 1000 + +match[3] * 1000 + +match[4]
 }
 
-const useLyrics = () => {
+export const useLyrics = () => {
   const nowPlayingItem = useNowPlayingItem()
   const id = useMemo(() => nowPlayingItem?.id, [nowPlayingItem])
   const { data, isValidating, error } = useSWRImmutable(
@@ -40,7 +40,7 @@ const useLyrics = () => {
       if (id === undefined) {
         return null
       }
-      return `v1/catalog/${MusicKit.getInstance().api.storefrontId}/songs/${id}/lyrics`
+      return `v1/catalog/{storefrontId}/songs/${id}/lyrics`
     },
     {
       shouldRetryOnError: false,
@@ -49,11 +49,9 @@ const useLyrics = () => {
   const lyrics = useMemo(() => {
     if (Array.isArray(data)) {
       const lyrics = data.find((item) => item?.type === 'lyrics')
-      if (lyrics?.attributes?.ttml) return parseLyrics(String(lyrics.attributes.ttml))
+      if (lyrics?.ttml) return parseLyrics(String(lyrics.ttml))
     }
     return null
   }, [data])
   return { lyrics, isValidating, error }
 }
-
-export default useLyrics

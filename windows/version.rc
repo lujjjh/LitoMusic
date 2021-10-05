@@ -11,7 +11,7 @@ BEGIN
     BEGIN
         BLOCK "040904E4"
         BEGIN
-			VALUE "FileDescription", "A lightweight Apple Music client."
+			VALUE "FileDescription", "Lito Music"
 			VALUE "FileVersion", VER_STR
 			VALUE "InternalName", "Lito Music"
 			VALUE "LegalCopyright", "See LICENSE in the repository."

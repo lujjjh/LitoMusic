@@ -4,7 +4,8 @@
       "connectToAppleMusic": "Connect to Apple Music",
       "listenNow": "Listen now",
       "nothing": "Nothing",
-      "fetchFailed": "Failed to load the data"
+      "fetchFailed": "Failed to load the data",
+      "browse": "Browse"
     }
   },
   "zh-CN": {
@@ -12,7 +13,8 @@
       "connectToAppleMusic": "连接到 Apple Music",
       "listenNow": "现在就听",
       "nothing": "没有数据",
-      "fetchFailed": "加载失败"
+      "fetchFailed": "加载失败",
+      "browse": "浏览"
     }
   }
 }

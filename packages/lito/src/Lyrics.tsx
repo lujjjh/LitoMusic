@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { useLyrics } from './api'
 import { useSetTheme } from './GlobalThemeContext'
 import Nothing from './Nothing'
 import { usePlaybackState, usePlayerRef } from './Player/ProgressControl'
 import { darkTheme, lightTheme } from './themes'
-import useLyrics from './useLyrics'
 import useNowPlayingItem from './useNowPlayingItem'
 
 export const LyricsContext = React.createContext({ visible: false, setVisible(value: boolean) {} })

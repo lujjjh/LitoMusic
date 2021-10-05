@@ -60,7 +60,10 @@ const Sidebar = () => {
       <Logo />
       <ul>
         <li>
-          <NavButton to="/">{t('listenNow')}</NavButton>
+          <NavButton to="/listen-now">{t('listenNow')}</NavButton>
+        </li>
+        <li>
+          <NavButton to="/browse">{t('browse')}</NavButton>
         </li>
       </ul>
     </Wrapper>

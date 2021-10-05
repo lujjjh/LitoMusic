@@ -2,10 +2,12 @@ import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { useState } from 'react'
 import { initReactI18next } from 'react-i18next'
-import { HashRouter as Router, Route } from 'react-router-dom'
+import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
+import { fetcher } from './api'
 import Authorize from './Authorize'
+import Browse from './Browse'
 import ControlButtons from './ControlButtons'
 import SetThemeContext from './GlobalThemeContext'
 import resources from './i18n/resources.json'
@@ -48,13 +50,6 @@ const Main = styled.div`
   overflow: overlay;
 `
 
-const fetcher = async (url: string) => {
-  const {
-    data: { data },
-  } = await MusicKit.getInstance().api.music(url)
-  return data
-}
-
 const App = () => {
   const [theme, setTheme] = useState(lightTheme)
   const authorized = useAuthorized()
@@ -77,7 +72,13 @@ const App = () => {
                     {authorized ? (
                       <>
                         <Player />
-                        <Route path="/" component={ListenNow} />
+                        <Switch>
+                          <Route path="/" exact>
+                            <Redirect to="/listen-now" />
+                          </Route>
+                          <Route path="/listen-now" component={ListenNow} />
+                          <Route path="/browse" component={Browse} />
+                        </Switch>
                       </>
                     ) : (
                       <Authorize />
