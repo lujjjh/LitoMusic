@@ -5,7 +5,8 @@
       "listenNow": "Listen now",
       "nothing": "Nothing",
       "fetchFailed": "Failed to load the data",
-      "browse": "Browse"
+      "browse": "Browse",
+      "radio": "Radio"
     }
   },
   "zh-CN": {
@@ -14,7 +15,8 @@
       "listenNow": "现在就听",
       "nothing": "没有数据",
       "fetchFailed": "加载失败",
-      "browse": "浏览"
+      "browse": "浏览",
+      "radio": "广播"
     }
   }
 }

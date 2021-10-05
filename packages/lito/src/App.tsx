@@ -14,6 +14,7 @@ import resources from './i18n/resources.json'
 import ListenNow from './ListenNow'
 import Lyrics, { LyricsContext } from './Lyrics'
 import Player from './Player'
+import Radio from './Radio'
 import Sidebar from './Sidebar'
 import { lightTheme } from './themes'
 import useAuthorized from './useAuthorized'
@@ -78,6 +79,7 @@ const App = () => {
                           </Route>
                           <Route path="/listen-now" component={ListenNow} />
                           <Route path="/browse" component={Browse} />
+                          <Route path="/radio" component={Radio} />
                         </Switch>
                       </>
                     ) : (

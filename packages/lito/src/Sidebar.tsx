@@ -65,6 +65,9 @@ const Sidebar = () => {
         <li>
           <NavButton to="/browse">{t('browse')}</NavButton>
         </li>
+        <li>
+          <NavButton to="/radio">{t('radio')}</NavButton>
+        </li>
       </ul>
     </Wrapper>
   )

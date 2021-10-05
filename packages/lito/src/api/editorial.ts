@@ -23,3 +23,22 @@ export const useMusics = () => {
     ...props,
   }
 }
+
+export const useRadios = () => {
+  const qs = useMemo(() => {
+    const qs = new URLSearchParams()
+    qs.set('platform', 'web')
+    qs.set('name', 'radio')
+    qs.set('include[stations]', 'events')
+    qs.set('include[station-events]', 'curator')
+    qs.set('extend', 'editorialArtwork')
+    qs.set('tabs', 'subscriber')
+    qs.set('art[url]', 'f')
+    return qs.toString()
+  }, [])
+  const { data, ...props } = useGroupings(qs)
+  return {
+    data: data?.[0],
+    ...props,
+  }
+}
