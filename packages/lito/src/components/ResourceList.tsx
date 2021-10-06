@@ -90,6 +90,8 @@ const PlayButton = styled.button`
   transform: translate(-50%, -50%);
   appearance: none;
   border: 0 none;
+  border-radius: 50%;
+  overflow: hidden;
   padding: 0;
   background: none;
   position: relative;
