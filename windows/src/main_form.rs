@@ -335,7 +335,7 @@ unsafe extern "system" fn wndproc(
         .unwrap_or_else(|| WindowsAndMessaging::DefWindowProcW(h_wnd, msg, w_param, l_param))
 }
 
-unsafe fn wndproc_pre(h_wnd: HWND, msg: u32, w_param: WPARAM, l_param: LPARAM) -> Option<LRESULT> {
+unsafe fn wndproc_pre(h_wnd: HWND, msg: u32, w_param: WPARAM, _l_param: LPARAM) -> Option<LRESULT> {
     match msg {
         WindowsAndMessaging::WM_CREATE => {
             WindowsAndMessaging::SetWindowPos(
