@@ -1,17 +1,16 @@
 import { useEffect } from 'react'
-import { useRouteMatch } from 'react-router'
+import { useHistory } from 'react-router'
 
 export interface ScrollToTopProps<T extends HTMLElement> {
   scrollRef: React.RefObject<T>
 }
 
 export const ScrollToTop = <T extends HTMLElement>({ scrollRef }: ScrollToTopProps<T>) => {
-  const route = useRouteMatch()
+  const history = useHistory()
   useEffect(() => {
-    void route
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo(0, 0)
-    }
-  }, [route])
+    return history.listen(() => {
+      scrollRef.current?.scrollTo(0, 0)
+    })
+  }, [history])
   return null
 }
