@@ -5,7 +5,7 @@
   </a>
 </h1>
 <p align="center">
-  <a href="https://github.com/lujjjh/lito/releases"><img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/lujjjh/lito?sort=semver" /></a>
+  <a href="https://github.com/lujjjh/lito/releases"><img alt="GitHub release" src="https://img.shields.io/github/v/release/lujjjh/lito?include_prereleases" /></a>
 </p>
 <p align="center">
   <a href="README.md">English</a>
