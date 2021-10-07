@@ -5,7 +5,7 @@ use bindings::{
     },
     Windows::Win32::{
         Foundation::{E_POINTER, HWND, LPARAM, LRESULT, PWSTR, RECT, WPARAM},
-        Graphics::{DirectComposition, Dwm},
+        Graphics::Dwm,
         System::Com,
         UI::{Controls, KeyboardAndMouseInput, WindowsAndMessaging},
     },
@@ -217,9 +217,9 @@ impl MainForm {
             WindowsAndMessaging::WM_NCHITTEST => {
                 let result = self.composition.nc_hittest(l_param).unwrap();
                 if result != WindowsAndMessaging::HTNOWHERE {
-                    Some(LRESULT(result as i32))
+                    Some(LRESULT(result as isize))
                 } else {
-                    Some(LRESULT(WindowsAndMessaging::HTCLIENT as i32))
+                    Some(LRESULT(WindowsAndMessaging::HTCLIENT as isize))
                 }
             }
             WindowsAndMessaging::WM_MOVING => {
@@ -252,14 +252,7 @@ impl MainForm {
                     }
                     controller.put_Bounds(bounds).unwrap();
                     let webview_visual = self.composition.get_webview_visual();
-                    // TODO: Remove the workaround when https://github.com/microsoft/win32metadata/issues/600 is fixed.
-                    let set_offset_y: unsafe extern "system" fn(
-                        DirectComposition::IDCompositionVisual,
-                        f32,
-                    ) -> HRESULT = std::mem::transmute(webview_visual.vtable().6);
-                    set_offset_y(webview_visual.clone(), bounds.top as f32)
-                        .ok()
-                        .unwrap();
+                    webview_visual.SetOffsetY2(bounds.top as f32).unwrap();
                     self.composition.commit().unwrap();
                 }
                 Some(LRESULT(0))

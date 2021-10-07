@@ -413,17 +413,10 @@ impl WebViewFormComposition {
             dc.EndDraw(ptr::null_mut(), ptr::null_mut())?;
             surface.EndDraw()?;
             self.caption_button_visual.SetContent(&surface)?;
-            // TODO: Remove the workaround when https://github.com/microsoft/win32metadata/issues/600 is fixed.
-            let set_offset_x: unsafe extern "system" fn(
-                DirectComposition::IDCompositionVisual,
-                f32,
-            ) -> HRESULT = std::mem::transmute(self.caption_button_visual.vtable().4);
-            let set_offset_y: unsafe extern "system" fn(
-                DirectComposition::IDCompositionVisual,
-                f32,
-            ) -> HRESULT = std::mem::transmute(self.caption_button_visual.vtable().6);
-            set_offset_x(self.caption_button_visual.clone(), bounds.left * scale_x).ok()?;
-            set_offset_y(self.caption_button_visual.clone(), bounds.top * scale_y).ok()?;
+            self.caption_button_visual
+                .SetOffsetX2(bounds.left * scale_x)?;
+            self.caption_button_visual
+                .SetOffsetY2(bounds.top * scale_y)?;
             self.commit()?;
         }
         Ok(())
