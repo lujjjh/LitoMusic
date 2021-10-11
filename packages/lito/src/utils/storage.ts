@@ -1,16 +1,33 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+interface CustomStorageEvent extends CustomEvent {
+  detail: {
+    storageArea: Storage
+    key: string
+    newValue: string | null
+  }
+}
+
+declare global {
+  interface WindowEventMap {
+    customstorage: CustomStorageEvent
+  }
+}
+
 const _useStorage = (storage: Storage, key: string) => {
   const [value, _setValue] = useState(() => storage.getItem(key))
   useEffect(() => {
-    const handleStorage = (e: StorageEvent) => {
-      if (e.storageArea === storage && e.key === key) {
-        _setValue(e.newValue)
+    const handleStorage = (e: StorageEvent | CustomStorageEvent) => {
+      const detail = 'detail' in e ? e.detail : e
+      if (detail.storageArea === storage && detail.key === key) {
+        _setValue(detail.newValue)
       }
     }
     addEventListener('storage', handleStorage)
+    addEventListener('customstorage', handleStorage)
     return () => {
       removeEventListener('storage', handleStorage)
+      removeEventListener('customstorage', handleStorage)
     }
   }, [storage, key])
   const setValue = useCallback(
@@ -20,6 +37,12 @@ const _useStorage = (storage: Storage, key: string) => {
       } else {
         storage.setItem(key, value)
       }
+      const detail = {
+        storageArea: storage,
+        key,
+        newValue: value,
+      }
+      dispatchEvent(new CustomEvent('customstorage', { detail }))
     },
     [storage, key]
   )

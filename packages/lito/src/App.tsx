@@ -18,7 +18,7 @@ import Player from './Player'
 import Radio from './Radio'
 import Sidebar from './Sidebar'
 import { lightTheme } from './themes'
-import { useAuthorized } from './utils/auth'
+import { useAuthorized } from './utils'
 
 i18n
   .use(LanguageDetector)
