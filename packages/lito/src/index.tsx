@@ -4,6 +4,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { createGlobalStyle, css } from 'styled-components'
 import App from './App'
+import { getDeveloperToken } from './utils'
+
+Sentry.init({
+  dsn: 'https://0bcefbb4d3954ecc9505b4e6b31aa09e@o1022804.ingest.sentry.io/5992711',
+  integrations: [new Integrations.BrowserTracing()],
+
+  tracesSampleRate: 1.0,
+})
 
 const GlobalStyle = createGlobalStyle`${css`
   body {
@@ -51,16 +59,10 @@ const GlobalStyle = createGlobalStyle`${css`
 `}
 `
 
-Sentry.init({
-  dsn: 'https://0bcefbb4d3954ecc9505b4e6b31aa09e@o1022804.ingest.sentry.io/5992711',
-  integrations: [new Integrations.BrowserTracing()],
-
-  tracesSampleRate: 1.0,
-})
 ;(async () => {
+  const developerToken = await getDeveloperToken()
   await MusicKit.configure({
-    developerToken:
-      'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IldlYlBsYXlLaWQifQ.eyJpc3MiOiJBTVBXZWJQbGF5IiwiaWF0IjoxNjMwNDI5NjUzLCJleHAiOjE2NDU5ODE2NTN9.YGzFdPFa5UVUIyIHTdqXMazr0-79NhdBp5DZ8yfvv-jIAZ6UyKvODwIrCx2C0_GeNVfivXrs6ueYZHyFAjm6tQ',
+    developerToken,
   })
 
   ReactDOM.render(
