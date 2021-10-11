@@ -1,5 +1,5 @@
 #define VER 0,1,0,0
-#define VER_STR "0.1.0.0-beta.10\0"
+#define VER_STR "0.1.0.0-beta.11\0"
 
 1 VERSIONINFO
 
