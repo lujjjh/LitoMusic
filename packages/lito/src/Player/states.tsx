@@ -12,23 +12,25 @@ export const usePersistPlaybackStates = () => {
   )
 
   const [url, setURL] = useLocalStorage<string>('player.url')
+  const [index, setIndex] = useLocalStorage<number>('player.index', 0)
   usePlayerEventCallback(
     MusicKit.Events.nowPlayingItemDidChange,
     () => {
       const instance = MusicKit.getInstance()
       const url = (instance.nowPlayingItem as any)?.container?.attributes?.url
-      setURL(url)
+      if (url) {
+        setURL(url)
+      }
+      setIndex((instance as any).nowPlayingItemIndex || null)
     },
     []
   )
 
   useEffect(() => {
     const instance = MusicKit.getInstance()
-
     instance.volume = volume
-
     if (url) {
-      instance.setQueue({ url })
+      instance.setQueue({ url, startPosition: index })
     }
   }, [])
 }

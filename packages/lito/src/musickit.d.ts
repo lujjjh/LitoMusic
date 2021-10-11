@@ -19,6 +19,11 @@ declare namespace MusicKit {
     currentPlaybackTime: number
     currentPlaybackTimeRemaining: number
     volume: number
+    queue: {
+      position: number
+      nextPlayableItemIndex: number
+      item(index: number): MediaItem | undefined
+    }
   }
 }
 
