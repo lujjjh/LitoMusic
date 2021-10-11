@@ -1,21 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { usePlayerEventCallback } from './utils'
 
 const useAuthorized = () => {
-  const [authorized, setAuthorized] = useState<boolean>(false)
-  useEffect(() => {
-    const instance = MusicKit.getInstance()
-    const handleAuthorizationStatusDidChange = () => {
+  const [authorized, setAuthorized] = useState(() => MusicKit.getInstance().isAuthorized)
+  usePlayerEventCallback(
+    MusicKit.Events.authorizationStatusDidChange,
+    () => {
       // set on the next tick as mediaUserToken might be not ready
       setTimeout(() => {
-        setAuthorized(instance.isAuthorized)
+        setAuthorized(MusicKit.getInstance().isAuthorized)
       }, 0)
-    }
-    handleAuthorizationStatusDidChange()
-    instance.addEventListener(MusicKit.Events.authorizationStatusDidChange, handleAuthorizationStatusDidChange)
-    return () => {
-      instance.removeEventListener(MusicKit.Events.authorizationStatusDidChange, handleAuthorizationStatusDidChange)
-    }
-  }, [])
+    },
+    []
+  )
   return authorized
 }
 

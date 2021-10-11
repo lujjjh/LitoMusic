@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import useNowPlayingItem from '../useNowPlayingItem'
 import ProgressControl from './ProgressControl'
+import { usePersistPlaybackStates } from './states'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -96,6 +97,7 @@ const VolumeControl = styled.div`
 `
 const Player = () => {
   const mediaItem = useNowPlayingItem()
+  usePersistPlaybackStates()
   return (
     <Wrapper>
       <Controls>

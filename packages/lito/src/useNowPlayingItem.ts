@@ -1,18 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { usePlayerEventCallback } from './utils'
 
 const useNowPlayingItem = () => {
   const [value, setValue] = useState<MusicKit.MediaItem | undefined>()
-  useEffect(() => {
-    let instance = MusicKit.getInstance()
-    const handleMediaItemStateDidChange = () => {
-      setValue(instance.nowPlayingItem)
-    }
-    handleMediaItemStateDidChange()
-    instance.addEventListener(MusicKit.Events.mediaItemStateDidChange as any, handleMediaItemStateDidChange)
-    return () => {
-      instance.removeEventListener(MusicKit.Events.mediaItemStateDidChange, handleMediaItemStateDidChange)
-    }
-  }, [])
+  usePlayerEventCallback(
+    MusicKit.Events.mediaItemStateDidChange,
+    () => {
+      setValue(MusicKit.getInstance().nowPlayingItem)
+    },
+    []
+  )
   return value
 }
 

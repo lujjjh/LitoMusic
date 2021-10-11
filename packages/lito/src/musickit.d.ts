@@ -17,6 +17,7 @@ declare namespace MusicKit {
     currentPlaybackProgress: number
     currentPlaybackTime: number
     currentPlaybackTimeRemaining: number
+    volume: number
   }
 }
 

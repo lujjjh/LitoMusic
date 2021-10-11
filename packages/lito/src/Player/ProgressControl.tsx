@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import useNowPlayingItem from '../useNowPlayingItem'
+import { usePlayerEventCallback } from '../utils'
 
 export const usePlayerRef = () => {
   // Although we could use MusicKit's API to get the playback
@@ -123,21 +124,15 @@ const ProgressControl = () => {
   const [currentTime, setCurrentTime] = useState(0)
   const [remainingTime, setRemainingTime] = useState(0)
   const [progress, setProgress] = useState(0)
-  useEffect(() => {
+  const update = useCallback(() => {
     const instance = MusicKit.getInstance()
-    const update = () => {
-      setDuration(instance.currentPlaybackDuration)
-      setCurrentTime(instance.currentPlaybackTime)
-      setRemainingTime(instance.currentPlaybackTimeRemaining)
-      setProgress(instance.currentPlaybackProgress)
-    }
-    instance.addEventListener('playbackDurationDidChange', update)
-    instance.addEventListener('playbackTimeDidChange', update)
-    return () => {
-      instance.removeEventListener('playbackDurationDidChange', update)
-      instance.removeEventListener('playbackTimeDidChange', update)
-    }
+    setDuration(instance.currentPlaybackDuration)
+    setCurrentTime(instance.currentPlaybackTime)
+    setRemainingTime(instance.currentPlaybackTimeRemaining)
+    setProgress(instance.currentPlaybackProgress)
   }, [])
+  usePlayerEventCallback(MusicKit.Events.playbackDurationDidChange, update, [])
+  usePlayerEventCallback(MusicKit.Events.playbackTimeDidChange, update, [])
   const [shouldContinueToPlay, setShouldContinueToPlay] = useState(false)
   const handleSeekStart = useCallback(
     (event: React.MouseEvent<HTMLInputElement>) => {
