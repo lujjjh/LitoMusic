@@ -5,6 +5,7 @@ declare namespace MusicKit {
 
   interface Events {
     mediaItemStateDidChange: unknown
+    nowPlayingItemDidChange: unknown
   }
 
   const Events: {

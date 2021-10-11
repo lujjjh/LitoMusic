@@ -26,9 +26,10 @@ const _useStorage = (storage: Storage, key: string) => {
   return [value, setValue] as const
 }
 
-const createUseStorage =
-  (storage: Storage) =>
-  <T>(key: string, fallbackValue?: T | null) => {
+const createUseStorage = (storage: Storage) => {
+  function useStorage<T>(key: string): [T | null, (value: T | null) => void]
+  function useStorage<T>(key: string, fallbackValue: T): [T, (value: T | null) => void]
+  function useStorage<T>(key: string, fallbackValue?: T) {
     const [_value, _setValue] = _useStorage(storage, key)
     const value = useMemo(() => {
       if (_value === null && fallbackValue !== undefined) {
@@ -36,7 +37,7 @@ const createUseStorage =
       }
       if (_value !== null) {
         try {
-          return JSON.parse(_value)
+          return JSON.parse(_value) as T
         } catch {}
       }
       return fallbackValue ?? null
@@ -50,6 +51,8 @@ const createUseStorage =
     }
     return [value, setValue] as const
   }
+  return useStorage
+}
 
 export const useLocalStorage = createUseStorage(window.localStorage)
 export const useSessionStorage = createUseStorage(window.sessionStorage)

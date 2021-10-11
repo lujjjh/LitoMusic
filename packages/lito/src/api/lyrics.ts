@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import useSWRImmutable from 'swr/immutable'
-import useNowPlayingItem from '../useNowPlayingItem'
+import { useNowPlayingItem } from '../utils'
 
 export interface Lyrics {
   lines: LyricsLine[]

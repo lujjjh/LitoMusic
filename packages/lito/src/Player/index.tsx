@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import useNowPlayingItem from '../useNowPlayingItem'
+import { useNowPlayingItemOrNextPlayableItem } from '../utils'
 import ProgressControl from './ProgressControl'
 import { usePersistPlaybackStates } from './states'
 
@@ -96,7 +96,7 @@ const VolumeControl = styled.div`
   }
 `
 const Player = () => {
-  const mediaItem = useNowPlayingItem()
+  const mediaItem = useNowPlayingItemOrNextPlayableItem()
   usePersistPlaybackStates()
   return (
     <Wrapper>

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import useNowPlayingItem from '../useNowPlayingItem'
-import { usePlayerEventCallback } from '../utils'
+import { useNowPlayingItem, usePlayerEventCallback } from '../utils'
 
 export const usePlayerRef = () => {
   // Although we could use MusicKit's API to get the playback
