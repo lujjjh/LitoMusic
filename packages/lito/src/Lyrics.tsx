@@ -5,7 +5,7 @@ import { useSetTheme } from './GlobalThemeContext'
 import Nothing from './Nothing'
 import { usePlaybackState, usePlayerRef } from './Player/ProgressControl'
 import { darkTheme, lightTheme } from './themes'
-import useNowPlayingItem from './useNowPlayingItem'
+import { useNowPlayingItem } from './utils'
 
 export const LyricsContext = React.createContext({ visible: false, setVisible(value: boolean) {} })
 

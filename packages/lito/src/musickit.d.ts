@@ -5,6 +5,7 @@ declare namespace MusicKit {
 
   interface Events {
     mediaItemStateDidChange: unknown
+    nowPlayingItemDidChange: unknown
   }
 
   const Events: {
@@ -17,6 +18,11 @@ declare namespace MusicKit {
     currentPlaybackProgress: number
     currentPlaybackTime: number
     currentPlaybackTimeRemaining: number
+    volume: number
+    queue: {
+      position: number
+      item(index: number): MediaItem | undefined
+    }
   }
 }
 
