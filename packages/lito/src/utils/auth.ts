@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { usePlayerEventCallback } from './utils'
+import { usePlayerEventCallback } from '.'
 
-const useAuthorized = () => {
+export const useAuthorized = () => {
   const [authorized, setAuthorized] = useState(() => MusicKit.getInstance().isAuthorized)
   usePlayerEventCallback(
     MusicKit.Events.authorizationStatusDidChange,
@@ -15,5 +15,3 @@ const useAuthorized = () => {
   )
   return authorized
 }
-
-export default useAuthorized
