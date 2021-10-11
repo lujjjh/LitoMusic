@@ -17,7 +17,7 @@ export const getDeveloperToken = async () => {
     const updateDeveloperToken = async () => {
       const response = await fetch('https://api.litomusic.org/token')
       if (!response.ok) throw new Error(`unexpected status: ${response.status}`)
-      const { developerToken } = response.json() as any
+      const { developerToken } = await response.json()
       if (typeof developerToken !== 'string') throw new Error('failed to parse developerToken')
       localStorage.setItem(key, developerToken)
       return developerToken
