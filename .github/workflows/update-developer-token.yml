@@ -1,0 +1,35 @@
+name: Update developer token
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  update-developer-token:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run: |
+          curl -sSL https://music.apple.com/ \
+          | grep 'desktop-music-app/config/environment' \
+          | head \
+          | node -p 'JSON.stringify({ developerToken: JSON.parse(decodeURIComponent(require("fs").readFileSync(0, "utf-8").match(/content="([^"]+)/)[1])).MEDIA_API.token }, null, 2)' \
+          | tee token.json
+      - name: Create pull request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: '[Automated][CI Skip] Update developer token'
+          delete-branch: true
+          base: main
+          title: '[Automated][CI Skip] Update developer token'
+      - name: Merge pull request
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.cpr.outputs.pull-request-number }}
+          method: squash
