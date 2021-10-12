@@ -19,10 +19,19 @@ jobs:
           | head \
           | node -p 'JSON.stringify({ developerToken: JSON.parse(decodeURIComponent(require("fs").readFileSync(0, "utf-8").match(/content="([^"]+)/)[1])).MEDIA_API.token }, null, 2)' \
           | tee token.json
-      - name: Create Pull Request
+      - name: Create pull request
+        id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
+          token: ${{ secrets.PAT }}
           commit-message: Update developer token
           delete-branch: true
           base: main
           title: Update developer token
+      - name: Enable pull request automerge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v1
+        with:
+          token: ${{ secrets.PAT }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash
