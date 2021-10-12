@@ -17,7 +17,7 @@ jobs:
           curl -sSL https://music.apple.com/ \
           | grep 'desktop-music-app/config/environment' \
           | head \
-          | node -p 'JSON.stringify({ developerToken: JSON.parse(decodeURIComponent(require("fs").readFileSync(0, "utf-8").match(/content="([^"]+)/)[1])).MEDIA_API.token }, null, 2)'
+          | node -p 'JSON.stringify({ developerToken: JSON.parse(decodeURIComponent(require("fs").readFileSync(0, "utf-8").match(/content="([^"]+)/)[1])).MEDIA_API.token }, null, 2)' \
           | tee token.json
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
