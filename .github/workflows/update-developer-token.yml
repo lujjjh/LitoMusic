@@ -21,3 +21,8 @@ jobs:
           | tee token.json
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: Update developer token
+          delete-branch: true
+          base: main
+          title: Update developer token
