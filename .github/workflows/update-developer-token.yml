@@ -24,7 +24,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.PAT }}
-          commit-message: Update developer token
+          commit-message: [Automated][CI Skip] Update developer token
           delete-branch: true
           base: main
           title: Update developer token
