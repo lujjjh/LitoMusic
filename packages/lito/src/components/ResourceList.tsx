@@ -111,20 +111,24 @@ const PlayButton = styled.button`
 `
 
 const Resource = ({ value }: ResourceProps) => {
-  const { artwork, url, type } = value
+  const { artwork, url, id, type } = value
   // TODO: some resource's artwork is optional, fallback to render the title?
   if (!artwork) {
     throw new Error(`artwork not found in resource: ${JSON.stringify(value)}`)
   }
-  if (!url) {
-    throw new Error(`url not found in resource: ${JSON.stringify(value)}`)
+  if (!(url || id)) {
+    throw new Error(`url and id not found in resource: ${JSON.stringify(value)}`)
   }
   const artworkUrl = artwork.url.replace('{w}', '320').replace('{h}', '320').replace('{c}', 'cc').replace('{f}', 'webp')
   // TODO: Fix playable types and handle apple-curators.
   const playable = useMemo(() => type !== 'apple-curators', [type])
   const play = useCallback(async () => {
     const music = MusicKit.getInstance()
-    await music.setQueue({ url })
+    if (type === 'uploaded-videos') {
+      await music.setQueue({ uploadedVideo: id })
+    } else {
+      await music.setQueue({ url })
+    }
     await music.play()
   }, [])
   return (

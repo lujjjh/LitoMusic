@@ -40,7 +40,7 @@ export const useLyrics = () => {
       if (id === undefined) {
         return null
       }
-      return `v1/catalog/{storefrontId}/songs/${id}/lyrics`
+      return `v1/catalog/{{storefrontId}}/songs/${id}/lyrics`
     },
     {
       shouldRetryOnError: false,

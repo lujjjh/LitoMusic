@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import useSWR from 'swr'
 
 export const useGroupings = (qs: string | URLSearchParams) =>
-  useSWR(`v1/editorial/{storefrontId}/groupings?${qs.toString()}`)
+  useSWR(`v1/editorial/{{storefrontId}}/groupings?${qs.toString()}`)
 
 export const useMusics = () => {
   const qs = useMemo(() => {

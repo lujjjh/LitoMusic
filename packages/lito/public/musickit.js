@@ -19043,6 +19043,30 @@
       playlists: { isPlural: !0, apiMethod: 'playlists' },
       song: { isPlural: !1, apiMethod: 'song' },
       songs: { isPlural: !0, apiMethod: 'songs' },
+      tvEpisode: {
+        isPlural: !1,
+        apiMethod: 'tvEpisode',
+      },
+      tvEpisodes: {
+        isPlural: !0,
+        apiMethod: 'tvEpisodes',
+      },
+      uploadedAudio: {
+        isPlural: !1,
+        apiMethod: 'uploadedAudio',
+      },
+      uploadedAudios: {
+        isPlural: !0,
+        apiMethod: 'uploadedAudios',
+      },
+      uploadedVideo: {
+        isPlural: !1,
+        apiMethod: 'uploadedVideo',
+      },
+      uploadedVideos: {
+        isPlural: !0,
+        apiMethod: 'uploadedVideos',
+      },
     }
   class MediaAPIService {
     constructor(e) {

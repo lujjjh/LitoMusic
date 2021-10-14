@@ -1,4 +1,6 @@
 declare namespace MusicKit {
+  function getPlayerType(mediaItem: MediaItem): string
+
   interface API {
     music(request_uri: string): Promise<any>
   }
@@ -23,6 +25,7 @@ declare namespace MusicKit {
       position: number
       item(index: number): MediaItem | undefined
     }
+    videoContainerElement: HTMLElement | undefined
   }
 }
 
