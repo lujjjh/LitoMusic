@@ -16,6 +16,7 @@ Sentry.init({
 const GlobalStyle = createGlobalStyle`${css`
   body {
     margin: 0;
+    overflow: hidden;
     color: #333;
     font-size: 13px;
     font-family: system-ui;
