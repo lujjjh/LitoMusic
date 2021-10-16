@@ -40,6 +40,11 @@ declare namespace MusicKit {
     }
     videoContainerElement: HTMLElement | undefined
   }
+
+  interface SetQueueOptions {
+    uploadedVideo?: string
+    uploadedVideos?: string[]
+  }
 }
 
 declare namespace JSX {
