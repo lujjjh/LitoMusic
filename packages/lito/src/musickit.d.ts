@@ -14,6 +14,19 @@ declare namespace MusicKit {
     [key in keyof Events]: key
   }
 
+  enum PlaybackStates {
+    none,
+    loading,
+    playing,
+    paused,
+    stopped,
+    ended,
+    seeking,
+    waiting,
+    stalled,
+    completed,
+  }
+
   interface MusicKitInstance {
     nowPlayingItem: MediaItem | undefined
     currentPlaybackDuration: number
