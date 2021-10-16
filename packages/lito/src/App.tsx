@@ -19,6 +19,7 @@ import Radio from './Radio'
 import Sidebar from './Sidebar'
 import { lightTheme } from './themes'
 import { useAuthorized } from './utils'
+import VideoContainer from './VideoContainer'
 
 i18n
   .use(LanguageDetector)
@@ -93,6 +94,7 @@ const App = () => {
               </Router>
               <ControlButtons />
               <Lyrics />
+              <VideoContainer />
             </Wrapper>
           </LyricsContext.Provider>
         </SWRConfig>

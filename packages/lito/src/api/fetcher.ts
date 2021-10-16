@@ -3,6 +3,6 @@ export const fetcher = async (url: string) => {
     api,
     _bag: { store },
   } = MusicKit.getInstance() as any
-  const { data } = await api.music(url.replace(/\{storefrontId\}/g, api.storefrontId))
+  const { data } = await api.music(url)
   return store.populateDataRecords(data)
 }

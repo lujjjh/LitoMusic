@@ -1,4 +1,6 @@
 declare namespace MusicKit {
+  function getPlayerType(mediaItem: MediaItem): string
+
   interface API {
     music(request_uri: string): Promise<any>
   }
@@ -12,6 +14,19 @@ declare namespace MusicKit {
     [key in keyof Events]: key
   }
 
+  enum PlaybackStates {
+    none,
+    loading,
+    playing,
+    paused,
+    stopped,
+    ended,
+    seeking,
+    waiting,
+    stalled,
+    completed,
+  }
+
   interface MusicKitInstance {
     nowPlayingItem: MediaItem | undefined
     currentPlaybackDuration: number
@@ -23,6 +38,12 @@ declare namespace MusicKit {
       position: number
       item(index: number): MediaItem | undefined
     }
+    videoContainerElement: HTMLElement | undefined
+  }
+
+  interface SetQueueOptions {
+    uploadedVideo?: string
+    uploadedVideos?: string[]
   }
 }
 
