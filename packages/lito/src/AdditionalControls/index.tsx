@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { useLyricsContext } from '../Lyrics'
 import { isMacOS } from '../utils'
-import AirPlayButton from './AirPlayButton'
 import LyricsButton from './LyricsButton'
 
 const Styles = styled.div`
@@ -29,7 +28,8 @@ const ControlButtons = () => {
         } as React.CSSProperties
       }
     >
-      <AirPlayButton />
+      {/* It seems that AirPlay does not work on DRM contents. */}
+      {/* <AirPlayButton /> */}
       <LyricsButton />
     </Styles>
   )
