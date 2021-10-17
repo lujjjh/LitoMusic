@@ -44,10 +44,11 @@ const CurrentTime = styled.div`
   bottom: 3px;
   height: 12px;
   background-color: #fff;
-  opacity: 0.8;
+  opacity: 0.4;
   font-size: 12px;
   line-height: 12px;
-  transition: opacity 0.1s 0.3s ease;
+  transition: opacity 0.5s ease;
+  transform: scale(0.9);
   pointer-events: none;
 `
 
@@ -64,7 +65,6 @@ const Wrapper = styled.div`
   height: 20px;
   &:not(:hover) ${CurrentTime}, &:not(:hover) ${RemainingTime} {
     opacity: 0;
-    transition: opacity 0.1s ease;
   }
 `
 
@@ -170,7 +170,7 @@ const ProgressControl = () => {
   return (
     <Wrapper>
       <CurrentTime>{formatTime(currentTime)}</CurrentTime>
-      <RemainingTime>{formatTime(remainingTime)}</RemainingTime>
+      <RemainingTime>-{formatTime(remainingTime)}</RemainingTime>
       <Slider>
         <input
           type="range"
