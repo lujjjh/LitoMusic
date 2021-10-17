@@ -5,6 +5,7 @@ import { initReactI18next } from 'react-i18next'
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
+import { useBlurAfterClick, useKeyboardShortcuts } from './a11y'
 import AdditionalControls from './AdditionalControls'
 import { fetcher } from './api'
 import Authorize from './Authorize'
@@ -58,6 +59,8 @@ const App = () => {
   const authorized = useAuthorized()
   const [lyricsVisible, setLyricsVisible] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  useBlurAfterClick()
+  useKeyboardShortcuts()
   return (
     <SetThemeContext.Provider value={setTheme}>
       <ThemeProvider theme={theme}>
