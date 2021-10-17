@@ -19,3 +19,12 @@ export const useNowPlayingItem = (fallbackToQueue = false) => {
   usePlayerEventCallback(MusicKit.Events.queueItemsDidChange, update, [])
   return value
 }
+
+export const usePlaybackTargetAvailability = () => {
+  const [value, setValue] = useState(() => MusicKit.getInstance().playbackTargetAvailable)
+  const update = useCallback(() => {
+    setValue(MusicKit.getInstance().playbackTargetAvailable)
+  }, [])
+  usePlayerEventCallback(MusicKit.Events.playbackTargetAvailableDidChange, update, [])
+  return value
+}

@@ -39,6 +39,7 @@ declare namespace MusicKit {
       item(index: number): MediaItem | undefined
     }
     videoContainerElement: HTMLElement | undefined
+    showPlaybackTargetPicker(): void
   }
 
   interface SetQueueOptions {

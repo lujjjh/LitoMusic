@@ -5,11 +5,11 @@ import { initReactI18next } from 'react-i18next'
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
+import AdditionalControls from './AdditionalControls'
 import { fetcher } from './api'
 import Authorize from './Authorize'
 import Browse from './Browse'
 import { ScrollToTop } from './components'
-import ControlButtons from './ControlButtons'
 import SetThemeContext from './GlobalThemeContext'
 import resources from './i18n/resources.json'
 import ListenNow from './ListenNow'
@@ -92,7 +92,7 @@ const App = () => {
                   </Main>
                 </MainScroll>
               </Router>
-              <ControlButtons />
+              <AdditionalControls />
               <Lyrics />
               <VideoContainer />
             </Wrapper>
