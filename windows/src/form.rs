@@ -188,8 +188,8 @@ pub fn dip_to_px(h_wnd: HWND, dip: i32) -> i32 {
 }
 
 pub fn point_from_lparam(l_param: LPARAM) -> POINT {
-    let x = (l_param.0 & 0xFFFF) as i32;
-    let y = ((l_param.0 >> 16) & 0xFFFF) as i32;
+    let x = (l_param.0 & 0xFFFF) as i16 as i32;
+    let y = ((l_param.0 >> 16) & 0xFFFF) as i16 as i32;
     POINT { x, y }
 }
 
