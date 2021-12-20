@@ -111,7 +111,11 @@ const PlayButton = styled.button`
 `
 
 const Resource = ({ value }: ResourceProps) => {
-  const { artwork, url, id, type } = value
+  const { link, artwork, url, id, type } = value
+  if (link) {
+    // Hide the resource if it's an external link.
+    return null
+  }
   // TODO: some resource's artwork is optional, fallback to render the title?
   if (!artwork) {
     throw new Error(`artwork not found in resource: ${JSON.stringify(value)}`)
