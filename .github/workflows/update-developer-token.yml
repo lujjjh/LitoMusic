@@ -12,12 +12,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - run: |
-          curl -sSL https://music.apple.com/ \
-          | grep 'desktop-music-app/config/environment' \
-          | head \
-          | node -p 'JSON.stringify({ developerToken: JSON.parse(decodeURIComponent(require("fs").readFileSync(0, "utf-8").match(/content="([^"]+)/)[1])).MEDIA_API.token }, null, 2)' \
-          | tee token.json
+      - run: scripts/update-developer-token.sh
       - name: Create pull request
         id: cpr
         uses: peter-evans/create-pull-request@v3
